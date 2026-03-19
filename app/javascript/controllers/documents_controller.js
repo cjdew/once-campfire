@@ -10,6 +10,15 @@ export default class extends Controller {
   connect() {
     this.token = document.querySelector('meta[name="entra-token"]')?.content || ""
     this.open = false
+    this.handleKeydown = (e) => { if (e.key === "Escape") { this.closePreview(); this.close() } }
+    this.handleClickOutside = (e) => { if (this.open && !this.element.contains(e.target)) this.close() }
+    document.addEventListener("keydown", this.handleKeydown)
+    document.addEventListener("click", this.handleClickOutside)
+  }
+
+  disconnect() {
+    document.removeEventListener("keydown", this.handleKeydown)
+    document.removeEventListener("click", this.handleClickOutside)
   }
 
   toggle() {
