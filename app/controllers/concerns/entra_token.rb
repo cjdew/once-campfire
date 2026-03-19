@@ -8,9 +8,8 @@ module EntraToken
   private
 
   def current_user_entra_token
-    # TODO: Replace with real token extraction when OIDC is configured.
-    # Real implementation will read from session[:entra_access_token]
-    # populated by the OmniAuth OIDC callback.
+    # Populated by Sessions::OmniauthController#create after OIDC login.
+    # Returns empty string when user logged in via email/password (no SSO).
     session[:entra_access_token] || ""
   end
 end

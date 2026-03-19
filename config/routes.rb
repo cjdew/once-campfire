@@ -9,6 +9,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # OmniAuth OIDC callback (Entra ID SSO)
+  match "/auth/oidc/callback", to: "sessions/omniauth#create", via: %i[get post], as: :oidc_callback
+  get "/auth/failure", to: "sessions/omniauth#failure", as: :oidc_failure
+
   resource :account do
     scope module: "accounts" do
       resources :users
