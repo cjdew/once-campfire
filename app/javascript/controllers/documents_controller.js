@@ -3,15 +3,19 @@ import { marked } from "marked"
 import DOMPurify from "dompurify"
 
 export default class extends Controller {
-  static targets = ["dropdown", "list", "preview", "previewTitle", "previewMeta",
-                     "previewContent", "previewActions", "titleInput", "icon"]
+  static targets = ["dropdown", "list", "titleInput", "submitBtn", "icon"]
   static values = { roomId: Number, apiBase: { type: String, default: "/api/bot" } }
 
   connect() {
     this.token = document.querySelector('meta[name="entra-token"]')?.content || ""
+    this.userName = document.querySelector('meta[name="current-user-name"]')?.content || ""
     this.open = false
+    // Preview sidebar lives outside the controller scope (in <body>)
+    this.sidebar = document.getElementById("doc-sidebar")
     this.handleKeydown = (e) => { if (e.key === "Escape") { this.closePreview(); this.close() } }
-    this.handleClickOutside = (e) => { if (this.open && !this.element.contains(e.target)) this.close() }
+    this.handleClickOutside = (e) => {
+      if (this.open && !this.element.contains(e.target) && !this.sidebar?.contains(e.target)) this.close()
+    }
     document.addEventListener("keydown", this.handleKeydown)
     document.addEventListener("click", this.handleClickOutside)
   }
@@ -71,22 +75,29 @@ export default class extends Controller {
     const msgId = btn.dataset.msgId
 
     this.close()
-    this.previewTarget.classList.add("doc-sidebar--open")
-    this.previewContentTarget.innerHTML = '<div class="documents-loading">Loading preview...</div>'
+    if (!this.sidebar) return
+
+    const titleEl = this.sidebar.querySelector(".doc-sidebar__title")
+    const metaEl = this.sidebar.querySelector(".doc-sidebar__meta")
+    const contentEl = this.sidebar.querySelector(".doc-sidebar__content")
+    const actionsEl = this.sidebar.querySelector(".doc-sidebar__actions")
+
+    this.sidebar.classList.add("doc-sidebar--open")
+    contentEl.innerHTML = '<div class="documents-loading">Loading preview...</div>'
 
     try {
       const resp = await this.apiFetch(`/rooms/${this.roomIdValue}/documents/${docId}/preview`)
       if (!resp.ok) throw new Error(`${resp.status}`)
 
       const { document } = await resp.json()
-      this.previewTitleTarget.textContent = document.title
-      this.previewMetaTarget.textContent = [
+      titleEl.textContent = document.title
+      metaEl.textContent = [
         document.updatedBy ? `Last edited by ${document.updatedBy}` : "",
         document.updatedAt ? this.relativeTime(document.updatedAt) : "",
       ].filter(Boolean).join(", ")
 
       const rawHtml = marked.parse(document.text || "")
-      this.previewContentTarget.innerHTML = DOMPurify.sanitize(rawHtml, {
+      contentEl.innerHTML = DOMPurify.sanitize(rawHtml, {
         ALLOWED_TAGS: ["h1","h2","h3","h4","h5","h6","p","a","ul","ol","li",
                        "code","pre","blockquote","em","strong","img","table",
                        "thead","tbody","tr","th","td","br","hr"],
@@ -95,26 +106,30 @@ export default class extends Controller {
       })
 
       if (document.truncated) {
-        this.previewContentTarget.innerHTML += `<p class="documents-truncated"><a href="${this.escapeAttr(docUrl)}" target="_blank">Continue reading in Outline &rarr;</a></p>`
+        contentEl.innerHTML += `<p class="documents-truncated"><a href="${this.escapeAttr(docUrl)}" target="_blank">Continue reading in Outline &rarr;</a></p>`
       }
 
-      this.previewActionsTarget.innerHTML = `
+      actionsEl.innerHTML = `
         <a href="${this.escapeAttr(docUrl)}" target="_blank" class="btn btn--reversed documents-btn">Open in Outline</a>
-        ${msgId ? `<button class="btn documents-btn" data-action="click->documents#scrollToMessage" data-msg-id="${msgId}">Go to message</button>` : ""}
+        ${msgId ? `<button class="btn documents-btn" onclick="document.getElementById('message_${msgId}')?.scrollIntoView({behavior:'smooth',block:'center'});this.closest('.doc-sidebar').classList.remove('doc-sidebar--open')">Go to message</button>` : ""}
       `
     } catch (err) {
-      this.previewContentTarget.innerHTML = '<div class="documents-error">Couldn\'t load preview.</div>'
+      contentEl.innerHTML = '<div class="documents-error">Couldn\'t load preview.</div>'
       console.error("Preview error:", err)
     }
   }
 
   closePreview() {
-    this.previewTarget.classList.remove("doc-sidebar--open")
+    this.sidebar?.classList.remove("doc-sidebar--open")
   }
 
   showCreateForm() {
-    this.titleInputTarget.parentElement.classList.add("documents-create--open")
+    this.titleInputTarget.closest(".documents-dropdown__footer").classList.add("documents-create--open")
     this.titleInputTarget.focus()
+  }
+
+  onTitleInput() {
+    this.submitBtnTarget.disabled = !this.titleInputTarget.value.trim()
   }
 
   async createDocument(event) {
@@ -122,6 +137,8 @@ export default class extends Controller {
     const title = this.titleInputTarget.value.trim()
     if (!title) return
     this.titleInputTarget.disabled = true
+    this.submitBtnTarget.disabled = true
+    this.submitBtnTarget.textContent = "Creating..."
     try {
       const resp = await this.apiFetch(`/rooms/${this.roomIdValue}/documents`, {
         method: "POST",
@@ -131,14 +148,33 @@ export default class extends Controller {
         if (resp.status === 401) return this.handleAuthError()
         throw new Error(`${resp.status}`)
       }
+      this.showToast(`"${title}" created`)
       this.titleInputTarget.value = ""
-      this.titleInputTarget.parentElement.classList.remove("documents-create--open")
+      this.submitBtnTarget.disabled = true
+      this.titleInputTarget.closest(".documents-dropdown__footer").classList.remove("documents-create--open")
       this.loadDocuments()
     } catch (err) {
+      this.showToast("Failed to create document", true)
       console.error("Create document error:", err)
     } finally {
       this.titleInputTarget.disabled = false
+      this.submitBtnTarget.textContent = "Create"
     }
+  }
+
+  showToast(message, isError = false) {
+    const existing = document.getElementById("doc-toast")
+    if (existing) existing.remove()
+    const toast = document.createElement("div")
+    toast.id = "doc-toast"
+    toast.className = `doc-toast ${isError ? "doc-toast--error" : "doc-toast--success"}`
+    toast.textContent = message
+    document.body.appendChild(toast)
+    requestAnimationFrame(() => toast.classList.add("doc-toast--visible"))
+    setTimeout(() => {
+      toast.classList.remove("doc-toast--visible")
+      setTimeout(() => toast.remove(), 300)
+    }, 3000)
   }
 
   scrollToMessage(event) {
@@ -155,7 +191,12 @@ export default class extends Controller {
 
   async apiFetch(path, opts = {}) {
     return fetch(`${this.apiBaseValue}${path}`, {
-      headers: { "Content-Type": "application/json", "x-auth-token": this.token, ...opts.headers },
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": this.token,
+        "x-user-name": this.userName,
+        ...opts.headers,
+      },
       ...opts,
     })
   }

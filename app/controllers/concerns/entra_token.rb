@@ -8,8 +8,8 @@ module EntraToken
   private
 
   def current_user_entra_token
-    # Populated by Sessions::OmniauthController#create after OIDC login.
-    # Returns empty string when user logged in via email/password (no SSO).
-    session[:entra_access_token] || ""
+    # Prefer Entra access token from OIDC login; fall back to admin token
+    # so the documents API works for email/password sessions too.
+    session[:entra_access_token].presence || ENV["CANVAS_BOT_ADMIN_TOKEN"] || ""
   end
 end
