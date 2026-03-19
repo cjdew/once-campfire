@@ -1,0 +1,15 @@
+<div class="documents-dropdown" data-documents-target="dropdown">
+  <div class="documents-dropdown__header">
+    <span class="documents-dropdown__title">Documents</span>
+  </div>
+  <div class="documents-dropdown__list" data-documents-target="list">
+    <div class="documents-empty">Click to load documents.</div>
+  </div>
+  <div class="documents-dropdown__footer">
+    <button class="documents-create-btn" data-action="click->documents#showCreateForm">+ New Document</button>
+    <form class="documents-create-form" data-action="submit->documents#createDocument">
+      <input type="text" placeholder="Document title..." data-documents-target="titleInput" class="documents-create-input" />
+      <button type="submit" class="btn btn--reversed documents-create-submit">Create</button>
+    </form>
+  </div>
+</div>
