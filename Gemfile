@@ -34,7 +34,7 @@ gem "sentry-ruby"
 gem "sentry-rails"
 
 # OIDC / SSO
-gem "omniauth-openid-connect", "~> 0.8"
+gem "omniauth_openid_connect", "~> 0.8"
 gem "omniauth-rails_csrf_protection", "~> 1.0"
 
 # Other
