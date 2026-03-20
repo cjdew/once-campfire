@@ -1,6 +1,6 @@
 module MessagesHelper
   def message_area_tag(room, &)
-    tag.div id: "message-area", class: "message-area", contents: true, data: {
+    tag.div id: "message-area", class: "message-area", contents: true, aria: { live: "polite", atomic: "false" }, data: {
       controller: "messages presence drop-target",
       action: [ messages_actions, drop_target_actions, presence_actions ].join(" "),
       messages_first_of_day_class: "message--first-of-day",

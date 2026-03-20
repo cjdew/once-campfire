@@ -9,7 +9,7 @@
    ============================================================================ */
 
 /* --- Typography --- */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Lora:wght@400;600;700&display=swap');
 
 /* --- Color System --- */
 :root {
@@ -31,6 +31,7 @@
   --mosaic-black: #181818;
   --mosaic-charcoal: #1e1e1e;
   --mosaic-warm-white: #F5F5F5;
+  --mosaic-warm-bg: #F5F5F5;
   --mosaic-border: #E5E5E5;
 
   /* Typography */
@@ -46,6 +47,8 @@
     --lch-gray: 22% 0.005 80;
     --lch-gray-dark: 27% 0.005 80;
     --lch-gray-darker: 42% 0.008 80;
+    --mosaic-warm-bg: #1e1e1e;
+    --mosaic-border: #333333;
   }
 }
 
@@ -77,7 +80,7 @@ html, body {
    ============================================================================ */
 
 body {
-  background-color: var(--mosaic-warm-white);
+  background-color: var(--mosaic-warm-bg);
 }
 
 /* Flip the grid: sidebar on the left */
@@ -89,7 +92,7 @@ body.sidebar {
 }
 
 #main-content {
-  background-color: var(--mosaic-warm-white);
+  background-color: var(--mosaic-warm-bg);
 }
 
 /* Main content border on left edge (adjacent to sidebar) */
@@ -131,7 +134,7 @@ body.sidebar {
   .sidebar #nav::before {
     background: linear-gradient(
       180deg,
-      var(--mosaic-warm-white) 30%,
+      var(--mosaic-warm-bg) 30%,
       rgba(245, 245, 245, 0) 100%
     ) !important;
   }
@@ -442,7 +445,7 @@ body.sidebar {
   background-color: white;
   border: 1px solid var(--mosaic-border);
   padding: 0.4em 1.5ch;
-  color: #94a3b8;
+  color: #64748b;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   border-radius: 9999px;
 }
@@ -459,7 +462,7 @@ body.sidebar {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #64748b;
+  color: #475569;
 }
 
 /* --- Permalink timestamps --- */
@@ -467,7 +470,7 @@ body.sidebar {
   font-family: var(--font-family);
   font-size: 0.65rem;
   letter-spacing: 0.01em;
-  color: #94a3b8;
+  color: #64748b;
 }
 
 /* --- Attachments --- */
@@ -489,7 +492,7 @@ body.sidebar {
 .composer__input {
   --input-border-radius: 1rem;
   border-radius: 1rem !important;
-  background-color: var(--mosaic-warm-white) !important;
+  background-color: var(--mosaic-warm-bg) !important;
   border: 1px solid var(--mosaic-border) !important;
   transition: border-color 200ms ease, box-shadow 200ms ease;
 }
@@ -570,7 +573,7 @@ body.sidebar {
 }
 
 .message__avatar {
-  box-shadow: 0 0 0 var(--hover-size) var(--mosaic-warm-white);
+  box-shadow: 0 0 0 var(--hover-size) var(--mosaic-warm-bg);
 }
 
 .message__avatar .avatar {
@@ -723,7 +726,7 @@ legend {
 .notifications-help {
   border-radius: 0.625rem;
   border-color: var(--mosaic-border);
-  background-color: var(--mosaic-warm-white);
+  background-color: var(--mosaic-warm-bg);
 }
 
 .signup { font-family: var(--font-family); }
