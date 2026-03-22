@@ -29,4 +29,11 @@
   </label>
 </div>
 
+<div class="flex align-center gap">
+  <label class="flex align-center gap flex-item-grow txt-large input input--actor">
+    <%= form.text_area :bio, class: "input", placeholder: "What does this bot do?", rows: 3,
+          data: { "1p-ignore": true } %>
+  </label>
+</div>
+
 <%= profile_form_submit_button %>
