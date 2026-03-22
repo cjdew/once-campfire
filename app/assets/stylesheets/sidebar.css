@@ -395,3 +395,147 @@
 .sidebar--collapsed .sidebar__collapse-toggle {
   align-self: center;
 }
+
+/* Sidebar sections */
+.sidebar__section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125em;
+}
+
+.sidebar__section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.7;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar__section-header:hover {
+  opacity: 1;
+}
+
+.sidebar__section-arrow {
+  font-size: 0.6em;
+  transition: transform 0.15s ease;
+}
+
+.sidebar__section--collapsed .sidebar__section-arrow {
+  transform: rotate(-90deg);
+}
+
+.sidebar__section-title {
+  flex-grow: 1;
+}
+
+.sidebar__section-action {
+  padding: 0.25em;
+  opacity: 0.5;
+}
+
+.sidebar__section-action:hover {
+  opacity: 1;
+}
+
+.sidebar__section-label {
+  font-size: 0.8rem;
+}
+
+.sidebar__section-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125em;
+}
+
+.sidebar__section--collapsed .sidebar__section-body {
+  /* Controlled by JS for unread peek-through */
+}
+
+/* Room wrapper with star on hover */
+.sidebar__room-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar__room-wrapper .room,
+.sidebar__room-wrapper .direct {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.sidebar__star-btn {
+  position: absolute;
+  right: 0.25em;
+  opacity: 0;
+  padding: 0.25em;
+  font-size: 0.8rem;
+  transition: opacity 0.1s ease;
+  background: var(--color-sidebar-bg, inherit);
+}
+
+.sidebar__room-wrapper:hover .sidebar__star-btn {
+  opacity: 0.5;
+}
+
+.sidebar__star-btn:hover {
+  opacity: 1 !important;
+}
+
+.sidebar__star {
+  font-size: 0.7rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.sidebar__star--active {
+  color: #e8c44a;
+}
+
+/* Placeholder users in DMs section */
+.sidebar__placeholders {
+  opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125em;
+}
+
+.sidebar__placeholders:hover {
+  opacity: 0.8;
+}
+
+/* Context menu */
+.sidebar__context-menu {
+  background: var(--color-sidebar-bg, #1a1a2e);
+  padding: 0.25em;
+  min-width: 140px;
+}
+
+.sidebar__context-menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 0.5em 0.75em;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.sidebar__context-menu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Hide sections in collapsed sidebar */
+.sidebar--collapsed .sidebar__section-header span:not(.sidebar__section-arrow),
+.sidebar--collapsed .sidebar__section-action,
+.sidebar--collapsed .sidebar__star-btn,
+.sidebar--collapsed .sidebar__placeholders,
+.sidebar--collapsed .sidebar__section-label {
+  display: none;
+}
