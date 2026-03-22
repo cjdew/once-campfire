@@ -349,6 +349,11 @@
   transition: width 0.2s ease, min-width 0.2s ease;
 }
 
+/* When sidebar is collapsed, shrink the grid column */
+body:has(.sidebar--collapsed) {
+  --sidebar-width: 48px !important;
+}
+
 .sidebar--collapsed .sidebar__container {
   overflow-x: hidden;
 }
@@ -414,13 +419,17 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  opacity: 0.6;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
   width: 100%;
   text-align: left;
   background: transparent;
   border: none;
   box-shadow: none;
+}
+
+.sidebar__section-header:hover {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .sidebar__section-header:hover {
