@@ -513,6 +513,8 @@
       --avatar-size: 1.25em;
 
       flex-shrink: 0;
+      border: none !important;
+      box-shadow: none !important;
     }
   }
 }
