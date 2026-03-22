@@ -1,5 +1,28 @@
-<%= link_to_room room,
-      id: dom_id(room, :list), data: { sorted_list_name: room.name },
-      style: "--column-gap: 0.5em", class: [ "align-center gap room btn txt-nowrap", "unread": local_assigns[:unread] ] do %>
-  <span class="overflow-ellipsis"><%= room.name %></span>
-<% end %>
+<% membership = local_assigns[:membership] %>
+<div class="sidebar__room-wrapper"
+     id="<%= dom_id(room, :list) %>"
+     data-controller="favorite context-menu"
+     data-sorted-list-target="item"
+     data-sorted-list-name="<%= room.name %>"
+     data-sorted-list-favorited="<%= membership&.favorited? ? 'true' : 'false' %>"
+     data-favorite-url-value="<%= membership ? membership_favorite_path(membership) : '' %>"
+     data-context-menu-favorited-value="<%= membership&.favorited? %>">
+  <%= link_to_room room,
+    data: {
+      sorted_list_target: nil,
+      action: "sidebar-collapse#expandBeforeNavigate"
+    },
+    style: "--column-gap: 0.5em",
+    class: [ "align-center gap room btn txt-nowrap", "unread": local_assigns[:unread] ] do %>
+    <span class="overflow-ellipsis"><%= room.name %></span>
+    <% if membership&.favorited? %>
+      <span class="sidebar__star sidebar__star--active">&#9733;</span>
+    <% end %>
+  <% end %>
+
+  <% if membership %>
+    <button class="btn sidebar__star-btn" data-action="favorite#toggle" aria-label="<%= membership.favorited? ? 'Unfavorite' : 'Favorite' %>">
+      <%= membership.favorited? ? "&#9733;".html_safe : "&#9734;".html_safe %>
+    </button>
+  <% end %>
+</div>

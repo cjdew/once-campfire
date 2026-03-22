@@ -2,55 +2,61 @@
   <%= turbo_stream_from :rooms %>
   <%= turbo_stream_from Current.user, :rooms %>
 
-  <button class="btn sidebar__collapse-toggle" data-action="sidebar-collapse#toggle" aria-label="Collapse sidebar">
-    <%= image_tag "arrow-left.svg", size: 20, aria: { hidden: "true" }, class: "sidebar__collapse-icon colorize--black" %>
-  </button>
-
   <div class="sidebar__container overflow-y overflow-hide-scrollbar"
       data-controller="badge-dot"
       data-badge-dot-unread-class="unread"
       data-action="rooms-list:unread@window->badge-dot#update rooms-list:read@window->badge-dot#update turbo:submit-start->turbo-frame#unpermanize">
-    <turbo-frame id="direct_rooms_control" target="_top">
-      <div class="directs gap overflow-x overflow-hide-scrollbar">
-        <%= link_to new_rooms_direct_path, class: "direct direct__new", data: { turbo_frame: "_self" } do %>
-          <span class="avatar avatar--icon">
-            <%= image_tag "messages-add.svg", size: 20, aria: { hidden: "true" }, class: "colorize--black" %>
-          </span>
 
-          <span class="direct__author flex max-width min-width border-radius pad-inline-half">
-            <span class="for-screen-reader">New</span>
-            <span class="txt-small overflow-clip">Ping</span>
-          </span>
-        <% end %>
+    <button class="btn sidebar__collapse-toggle" data-action="sidebar-collapse#toggle" aria-label="Collapse sidebar">
+      <%= image_tag "arrow-left.svg", size: 20, aria: { hidden: "true" }, class: "sidebar__collapse-icon colorize--black" %>
+    </button>
 
-        <div id="direct_rooms" contents data-controller="sorted-list" data-action="rooms-list:unread@window->sorted-list#updateItem">
-          <%= render partial: "users/sidebars/rooms/direct", collection: @direct_memberships, as: :membership, cached: true %>
+    <%# Channels Section %>
+    <div class="sidebar__section" data-controller="section-collapse" data-section-collapse-key-value="campfire:channels-collapsed">
+      <button class="sidebar__section-header btn" data-action="section-collapse#toggle">
+        <span class="sidebar__section-arrow">&#9660;</span>
+        <span class="sidebar__section-title">Channels</span>
+      </button>
+
+      <div class="sidebar__section-body" data-section-collapse-target="body">
+        <div id="shared_rooms" contents data-controller="sorted-list">
+          <% @channel_memberships.each do |membership| %>
+            <%= render "users/sidebars/rooms/shared", room: membership.room, unread: membership.unread?, membership: membership %>
+          <% end %>
         </div>
 
-        <div contents>
+        <% if Current.user.administrator? || !Current.account.settings.restrict_room_creation_to_administrators? %>
+          <%= link_to new_rooms_open_path, class: "rooms__new-btn btn room align-center gap txt-reversed", aria: { label: "New Chat Room" } do %>
+            <%= image_tag "add.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: new-room" %>
+            <span class="sidebar__section-label">New Room</span>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Direct Messages Section %>
+    <div class="sidebar__section" data-controller="section-collapse" data-section-collapse-key-value="campfire:dms-collapsed">
+      <button class="sidebar__section-header btn" data-action="section-collapse#toggle">
+        <span class="sidebar__section-arrow">&#9660;</span>
+        <span class="sidebar__section-title">Direct Messages</span>
+
+        <%= link_to new_rooms_direct_path, class: "sidebar__section-action btn", data: { turbo_frame: "_self", action: "click->section-collapse#stopPropagation" } do %>
+          <%= image_tag "messages-add.svg", size: 16, aria: { hidden: "true" }, class: "colorize--black" %>
+        <% end %>
+      </button>
+
+      <div class="sidebar__section-body" data-section-collapse-target="body">
+        <div id="direct_rooms" contents data-controller="sorted-list" data-action="rooms-list:unread@window->sorted-list#updateItem">
+          <% @direct_memberships.each do |membership| %>
+            <%= render "users/sidebars/rooms/direct", membership: membership %>
+          <% end %>
+        </div>
+
+        <div class="sidebar__placeholders" contents>
           <%= render partial: "users/sidebars/rooms/direct_placeholder", collection: @direct_placeholder_users, as: :user %>
         </div>
       </div>
-    </turbo-frame>
-
-    <div class="rooms position-relative flex flex-column gap">
-      <div id="shared_rooms" contents data-controller="sorted-list">
-        <% @other_memberships.each do |membership| %>
-          <%= render "users/sidebars/rooms/shared", room: membership.room, unread: membership.unread? %>
-        <% end %>
-      </div>
-
-      <% if Current.user.administrator? || !Current.account.settings.restrict_room_creation_to_administrators? %>
-        <%= link_to new_rooms_open_path, class: "rooms__new-btn btn room align-center gap txt-reversed", aria: { label: "New Chat Room" } do %>
-          <%= image_tag "add.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: new-room" %>
-        <% end %>
-      <% end %>
     </div>
-
-    <button class="btn sidebar__toggle" data-action="toggle-class#toggle">
-      <%= image_tag "menu.svg", size: 20, aria: { hidden: "true" } %>
-      <span class="for-screen-reader">Open menu</span>
-    </button>
   </div>
 
   <div class="flex align-end sidebar__tools gap justify-end">

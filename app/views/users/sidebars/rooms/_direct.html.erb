@@ -1,31 +1,49 @@
 <% cache membership do %>
   <% members = membership.room.users.without(membership.user).presence || [ membership.user ] %>
 
-  <%= link_to_room membership.room, class: [ "direct", "unread": membership.unread? ], id: dom_id(membership.room, :list),
-        data: { sorted_list_number: membership.room.updated_at.to_fs(:epoch) } do %>
-    <% if members.many? %>
-      <div class="avatar__group">
-        <% members.first(4).each do |member| %>
-          <span class="avatar">
-            <%= image_tag fresh_user_avatar_path(member), size: 20, aria: { hidden: "true" } %>
-          </span>
-        <% end %>
-      </div>
-    <% else %>
-      <span class="avatar">
-        <%= image_tag fresh_user_avatar_path(members.first), size: 48, aria: { hidden: "true" } %>
-      </span>
-    <% end %>
+  <div class="sidebar__room-wrapper"
+       id="<%= dom_id(membership.room, :list) %>"
+       data-controller="favorite context-menu"
+       data-sorted-list-target="item"
+       data-sorted-list-number="<%= membership.room.updated_at.to_fs(:epoch) %>"
+       data-sorted-list-favorited="<%= membership.favorited? ? 'true' : 'false' %>"
+       data-favorite-url-value="<%= membership_favorite_path(membership) %>"
+       data-context-menu-favorited-value="<%= membership.favorited? %>">
+    <%= link_to_room membership.room, class: [ "room btn align-center gap txt-nowrap", "unread": membership.unread? ],
+          data: {
+            sorted_list_target: nil,
+            action: "sidebar-collapse#expandBeforeNavigate"
+          } do %>
+      <% if members.many? %>
+        <div class="avatar__group avatar__group--small">
+          <% members.first(2).each do |member| %>
+            <span class="avatar avatar--small">
+              <%= image_tag fresh_user_avatar_path(member), size: 20, aria: { hidden: "true" } %>
+            </span>
+          <% end %>
+        </div>
+      <% else %>
+        <span class="avatar avatar--small">
+          <%= image_tag fresh_user_avatar_path(members.first), size: 20, aria: { hidden: "true" } %>
+        </span>
+      <% end %>
 
-    <span class="direct__author flex align-center gap max-width min-width border-radius txt-small">
-      <span class="txt-nowrap overflow-ellipsis">
+      <span class="overflow-ellipsis txt-small">
         <span class="for-screen-reader">Ping with</span>
         <% if members.many? %>
-          <%= members.map { |member| member.name.split(' ')[0, 3].map { |str| str[0].capitalize }.join }.to_sentence(two_words_connector: '+') %>
+          <%= members.map { |m| m.name.split(' ').first }.to_sentence(two_words_connector: ', ') %>
         <% else %>
-          <%= members.first.name.split(' ')[0] %>
+          <%= members.first.name %>
         <% end %>
       </span>
-    </span>
-  <% end %>
+
+      <% if membership.favorited? %>
+        <span class="sidebar__star sidebar__star--active">&#9733;</span>
+      <% end %>
+    <% end %>
+
+    <button class="btn sidebar__star-btn" data-action="favorite#toggle" aria-label="<%= membership.favorited? ? 'Unfavorite' : 'Favorite' %>">
+      <%= membership.favorited? ? "&#9733;".html_safe : "&#9734;".html_safe %>
+    </button>
+  </div>
 <% end %>
