@@ -456,7 +456,24 @@
 .sidebar__section-body {
   display: flex;
   flex-direction: column;
-  gap: 0.125em;
+  gap: 0;
+
+  .rooms__new-btn {
+    --btn-border-color: transparent;
+
+    background: transparent;
+    border-style: solid;
+    box-shadow: none;
+    margin-inline: 0.5em;
+    margin-block-start: 0.25em;
+    opacity: 0.5;
+    padding: 0.375em 0.5em;
+
+    &:hover {
+      opacity: 0.8;
+      background: rgba(255, 255, 255, 0.05);
+    }
+  }
 }
 
 .sidebar__section--collapsed .sidebar__section-body {
@@ -468,9 +485,26 @@
   position: relative;
   display: flex;
   align-items: center;
+  padding-inline: 0.5em;
 
   .room {
-    --btn-border-radius: 0.5em;
+    --btn-border-radius: 0.375em;
+    --btn-border-color: transparent;
+
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    padding: 0.375em 0.5em;
+    gap: 0.5em;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &.unread {
+      box-shadow: none;
+      --btn-border-color: transparent;
+    }
   }
 }
 
