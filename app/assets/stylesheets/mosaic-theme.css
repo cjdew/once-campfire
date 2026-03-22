@@ -372,6 +372,8 @@ body.sidebar {
 
 .messages {
   --message-space: 1.75em;
+
+  align-content: end;
 }
 
 /* --- Regular message bubbles — white bento card --- */
