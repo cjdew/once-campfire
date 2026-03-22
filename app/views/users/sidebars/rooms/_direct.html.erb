@@ -14,19 +14,9 @@
             sorted_list_target: nil,
             action: "sidebar-collapse#expandBeforeNavigate"
           } do %>
-      <% if members.many? %>
-        <div class="avatar__group avatar__group--small">
-          <% members.first(2).each do |member| %>
-            <span class="avatar avatar--small">
-              <%= image_tag fresh_user_avatar_path(member), size: 20, aria: { hidden: "true" } %>
-            </span>
-          <% end %>
-        </div>
-      <% else %>
-        <span class="avatar avatar--small">
-          <%= image_tag fresh_user_avatar_path(members.first), size: 20, aria: { hidden: "true" } %>
-        </span>
-      <% end %>
+      <span class="avatar" style="--avatar-size: 1.5em;">
+        <%= image_tag fresh_user_avatar_path(members.first), size: 24, aria: { hidden: "true" } %>
+      </span>
 
       <span class="overflow-ellipsis txt-small">
         <span class="for-screen-reader">Ping with</span>
