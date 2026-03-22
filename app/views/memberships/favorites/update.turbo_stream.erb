@@ -1,0 +1,7 @@
+<%= turbo_stream.replace dom_id(@membership.room, :list) do %>
+  <% if @membership.room.direct? %>
+    <%= render "users/sidebars/rooms/direct", membership: @membership %>
+  <% else %>
+    <%= render "users/sidebars/rooms/shared", room: @membership.room, unread: @membership.unread?, membership: @membership %>
+  <% end %>
+<% end %>

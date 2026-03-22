@@ -83,6 +83,10 @@ Rails.application.routes.draw do
     resources :directs
   end
 
+  resources :memberships, only: [] do
+    resource :favorite, only: :update, module: :memberships
+  end
+
   resources :messages do
     scope module: "messages" do
       resources :boosts
