@@ -59,14 +59,16 @@
     </div>
   </div>
 
-  <div class="flex align-end sidebar__tools gap justify-end">
-    <%= link_to user_profile_path, class: "btn avatar flex-item-no-shrink sidebar__tool" do %>
-      <%= image_tag fresh_user_avatar_path(Current.user), size: 48, aria: { hidden: "true" }, style: "view-transition-name: avatar-#{Current.user.id}" %>
-      <span class="for-screen-reader">My Settings</span>
+  <div class="sidebar__tools">
+    <%= link_to user_profile_path, class: "sidebar__tool sidebar__tool--profile" do %>
+      <span class="avatar" style="--avatar-size: 1.75em;">
+        <%= image_tag fresh_user_avatar_path(Current.user), size: 28, aria: { hidden: "true" }, style: "view-transition-name: avatar-#{Current.user.id}" %>
+      </span>
+      <span class="sidebar__tool-label"><%= Current.user.name %></span>
     <% end %>
 
-    <%= link_to edit_account_path, class: "btn align-center gap txt-reversed sidebar__tool" do %>
-      <%= image_tag "settings.svg", size: 20, aria: { hidden: "true" }, style: "view-transition-name: account-settings" %>
+    <%= link_to edit_account_path, class: "sidebar__tool sidebar__tool--settings" do %>
+      <%= image_tag "settings.svg", size: 18, aria: { hidden: "true" }, class: "colorize--white", style: "view-transition-name: account-settings; opacity: 0.6;" %>
       <span class="for-screen-reader">Account Settings</span>
     <% end %>
   </div>
