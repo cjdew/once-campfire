@@ -2,6 +2,10 @@
   <%= turbo_stream_from :rooms %>
   <%= turbo_stream_from Current.user, :rooms %>
 
+  <button class="btn sidebar__collapse-toggle" data-action="sidebar-collapse#toggle" aria-label="Collapse sidebar">
+    <%= image_tag "arrow-left.svg", size: 20, aria: { hidden: "true" }, class: "sidebar__collapse-icon colorize--black" %>
+  </button>
+
   <div class="sidebar__container overflow-y overflow-hide-scrollbar"
       data-controller="badge-dot"
       data-badge-dot-unread-class="unread"
