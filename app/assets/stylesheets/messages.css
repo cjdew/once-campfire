@@ -158,33 +158,29 @@
 .message__day-separator {
   align-items: center;
   display: none;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 600;
   grid-area: sep;
   grid-template-columns: 1fr auto 1fr;
   inline-size: 100%;
   margin-block: var(--message-space);
   text-align: center;
-  text-transform: uppercase;
-  visibility: hidden;
+  letter-spacing: 0.02em;
+  color: var(--color-timestamp);
 
-  time,
-  span {
-    padding: 0.66em 2.33ch;
-    background-color: var(--color-message-bg);
-    border-radius: 3em;
+  time, span {
+    padding: 0.5em 1.5ch;
   }
 
-  &::after,
-  &::before {
-    border-top: 2px solid var(--color-message-bg);
+  &::after, &::before {
+    border-top: 1px solid var(--color-border, rgba(128, 128, 128, 0.3));
     content: "";
   }
+}
 
-  .message--first-of-day & {
-    display: grid;
-    visibility: visible;
-  }
+.message--first-of-day .message__day-separator {
+  display: grid;
+  visibility: visible;
 }
 
 .message__avatar {
