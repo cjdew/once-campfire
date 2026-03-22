@@ -4,7 +4,7 @@ import DOMPurify from "dompurify"
 
 export default class extends Controller {
   static targets = ["dropdown", "list", "titleInput", "submitBtn", "icon"]
-  static values = { roomId: Number, apiBase: { type: String, default: "/api/bot" } }
+  static values = { roomId: Number, roomName: String, apiBase: { type: String, default: "/api/bot" } }
 
   connect() {
     this.token = document.querySelector('meta[name="entra-token"]')?.content || ""
@@ -142,7 +142,7 @@ export default class extends Controller {
     try {
       const resp = await this.apiFetch(`/rooms/${this.roomIdValue}/documents`, {
         method: "POST",
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title, roomName: this.roomNameValue }),
       })
       if (!resp.ok) {
         if (resp.status === 401) return this.handleAuthError()

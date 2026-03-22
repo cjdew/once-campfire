@@ -17,8 +17,8 @@ class Users::SidebarsController < ApplicationController
   private
     def sort_with_favorites(memberships)
       favorited, regular = memberships.partition(&:favorited?)
-      favorited.sort_by { |m| m.room.name.downcase } +
-        regular.sort_by { |m| m.room.direct? ? m.room.updated_at.to_i * -1 : m.room.name.downcase }
+      favorited.sort_by { |m| (m.room.name || "").downcase } +
+        regular.sort_by { |m| m.room.direct? ? m.room.updated_at.to_i * -1 : (m.room.name || "").downcase }
     end
 
     def find_direct_placeholder_users
