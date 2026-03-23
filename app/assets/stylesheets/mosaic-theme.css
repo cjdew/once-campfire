@@ -94,7 +94,7 @@ body.sidebar {
 
 /* Room name pill in nav — gold bg, black text in both themes */
 #nav .room--current {
-  background-color: var(--color-primary-container) !important;
+  background: var(--color-primary-container) !important;
   color: #1a1400 !important;
   border-radius: 0.75rem;
 }
