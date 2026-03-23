@@ -430,34 +430,32 @@ html[data-theme="dark"] .message--me .message__body-content {
    ============================================================================ */
 
 .composer {
-  padding: 1rem calc(var(--inline-space) + 1vw);
-  border-block-start: 1px solid var(--color-surface-high);
-  background-color: white;
+  background-color: var(--color-bg);
+  border-top: none;
+  padding: 0.75rem 1rem;
 }
 
-.composer__input {
-  --input-border-radius: 1rem;
-  border-radius: 1rem !important;
-  background-color: var(--color-bg) !important;
-  border: 1px solid var(--color-surface-high) !important;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
+trix-editor {
+  background-color: var(--color-surface-high);
+  border: none;
+  border-radius: 1.5rem;
+  color: var(--color-text);
+  font-family: var(--font-family);
+  padding: 0.75rem 1rem;
 }
 
-.composer__input:focus-within {
-  border-color: var(--color-primary-container) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent) !important;
+trix-editor:focus {
+  border-bottom: 1px solid var(--color-primary);
+  outline: none;
 }
 
-/* Send button — dark with gold icon */
-.composer .btn--reversed {
-  --btn-background: var(--color-surface-low) !important;
-  --btn-color: var(--color-primary-container) !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 2px 8px rgba(24, 24, 24, 0.15);
-  transition: all 180ms ease;
-}
-.composer .btn--reversed:hover {
-  transform: scale(1.05);
+/* Send button */
+.composer .btn[type="submit"],
+.composer .btn--send {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  border: none;
+  border-radius: 9999px;
+  color: var(--color-on-primary);
 }
 
 .composer__file-thumbnail {
@@ -474,9 +472,12 @@ html[data-theme="dark"] .message--me .message__body-content {
   letter-spacing: -0.005em;
 }
 
+/* Primary (reversed) buttons */
 .btn--reversed {
-  --btn-background: var(--color-primary-container);
-  --btn-color: var(--color-surface-low);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  border: none;
+  border-radius: 9999px;
+  color: var(--color-on-primary);
   --btn-border-color: transparent;
   font-weight: 700;
 }
@@ -509,6 +510,14 @@ html[data-theme="dark"] .btn--reversed img:not(.avatar) {
 @keyframes mosaic-pulse {
   0%, 100% { outline-width: 0; outline-offset: 0; }
   50% { outline-width: 3px; outline-offset: 3px; }
+}
+
+/* Secondary/ghost buttons */
+.btn--plain {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 15%, transparent);
+  border-radius: 9999px;
+  color: var(--color-primary);
 }
 
 /* --- Theme Toggle --- */
@@ -565,6 +574,8 @@ html[data-theme="dark"] .btn--reversed img:not(.avatar) {
 }
 
 .message__avatar .avatar {
+  border: none;
+  box-shadow: none;
   border-radius: 0.75rem;
 }
 
