@@ -67,7 +67,7 @@
 }
 
 .messages {
-  --message-column-gap: 0.85rem;
+  --message-column-gap: 1.25rem;
   --message-row-gap: 0.1em;
   --message-space: 2rem;
 
