@@ -76,10 +76,9 @@ body.sidebar {
    ============================================================================ */
 
 #nav {
-  border-block-end: 1px solid var(--color-surface-high);
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(24px);
+  background-color: color-mix(in srgb, var(--color-bg) 70%, transparent);
+  border-bottom: none;
 }
 
 /* Fix nav positioning for left sidebar on desktop */
@@ -91,16 +90,7 @@ body.sidebar {
   }
 }
 
-/* Mobile nav gradient */
-@media (max-width: 100ch) {
-  .sidebar #nav::before {
-    background: linear-gradient(
-      180deg,
-      var(--color-bg) 30%,
-      color-mix(in srgb, var(--color-bg) 0%, transparent) 100%
-    ) !important;
-  }
-}
+/* Mobile nav glassmorphism — handled by nav.css &::before */
 
 /* Room name pill in nav */
 #nav .room--current {
