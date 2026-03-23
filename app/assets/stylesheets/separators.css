@@ -1,6 +1,7 @@
 .separator {
   border: none;
-  border-block-start: 1px var(--border-style, dashed) var(--color-border-darker);
+  background-color: var(--color-surface-high);
+  block-size: 1px;
   flex-grow: 1;
   min-inline-size: var(--inline-space-double);
 }

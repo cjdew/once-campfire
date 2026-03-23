@@ -67,7 +67,7 @@
 }
 
 .messages {
-  --message-column-gap: 0.66ch;
+  --message-column-gap: 0.85rem;
   --message-row-gap: 0.1em;
   --message-space: 2rem;
 
@@ -188,7 +188,7 @@
 
 .message__avatar {
   --avatar-border-size: 1px;
-  --avatar-size: 3.5ch;
+  --avatar-size: 3.5rem;
 
   grid-area: avatar;
   z-index: 2;

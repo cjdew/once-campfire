@@ -1,6 +1,6 @@
 /* Container */
 .boosts {
-  --boost-border-color: var(--color-border-dark);
+  --boost-border-color: var(--color-surface-high);
 }
 
 /* Item */
