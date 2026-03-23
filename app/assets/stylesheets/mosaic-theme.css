@@ -372,29 +372,53 @@ body.sidebar {
   border-color: var(--color-primary-container);
 }
 
-/* --- Own messages — primary color bubble, always black text --- */
+/* --- Own messages — gold bubble, text adapts per theme --- */
+/* Light: dark gold bg (#755c00) → white text */
+/* Dark: bright gold gradient → black text */
 .message--me .message__body-content {
   background: var(--color-primary);
   border-radius: 1.5rem 1.5rem 0.25rem 1.5rem;
-  color: #1a1400;
+  color: var(--color-on-primary);
 }
 
 html[data-theme="dark"] .message--me .message__body-content {
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  color: #1a1400;
 }
 
 @media (prefers-color-scheme: dark) {
   html:not([data-theme="light"]):not([data-theme="dark"]) .message--me .message__body-content {
     background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+    color: #1a1400;
   }
 }
 
 .message--me .message__body-content .trix-content {
+  color: var(--color-on-primary) !important;
+}
+
+html[data-theme="dark"] .message--me .message__body-content .trix-content {
   color: #1a1400 !important;
 }
 
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]):not([data-theme="dark"]) .message--me .message__body-content .trix-content {
+    color: #1a1400 !important;
+  }
+}
+
 .message--me .message__body-content a {
+  color: var(--color-on-primary) !important;
+}
+
+html[data-theme="dark"] .message--me .message__body-content a {
   color: #4a3800 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]):not([data-theme="dark"]) .message--me .message__body-content a {
+    color: #4a3800 !important;
+  }
 }
 
 /* --- Emoji messages — transparent, no card --- */
