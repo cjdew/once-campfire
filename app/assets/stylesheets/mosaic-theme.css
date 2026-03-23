@@ -132,7 +132,7 @@ body.sidebar {
   -webkit-backdrop-filter: none !important;
   border-inline-start: none !important;
   border-inline-end: none !important;
-  color: white;
+  color: var(--color-text);
 }
 
 @media (min-width: 100ch) {
@@ -155,15 +155,15 @@ body.sidebar {
 
 /* Sidebar container text */
 .sidebar__container {
-  color: white;
+  color: var(--color-text);
 }
 
 /* --- Sidebar Tools Bar (bottom) --- */
 .sidebar__tools {
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: var(--color-surface) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  border-block-start: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-block-start: none !important;
 }
 
 /* Anchor tools bar to LEFT for left sidebar */
@@ -188,6 +188,20 @@ body.sidebar {
   border-color: rgba(255, 255, 255, 0.2) !important;
 }
 
+
+/* --- Sidebar Section Headers --- */
+.sidebar__section-title {
+  font-family: var(--font-system);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-variant);
+}
+
+.sidebar__section-header {
+  color: var(--color-text-variant);
+}
 /* --- Sidebar Toggle (mobile hamburger) --- */
 /* Fixed upper-right hamburger; slides into sidebar when open */
 .sidebar__toggle {
@@ -218,7 +232,7 @@ body.sidebar {
    ============================================================================ */
 
 .room {
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   transition: background-color 200ms ease, box-shadow 200ms ease;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.7) !important;
@@ -226,7 +240,7 @@ body.sidebar {
 }
 
 .room:hover {
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: var(--color-surface-high) !important;
 }
 
 .room img:not(.avatar) {
@@ -245,9 +259,9 @@ body.sidebar {
 
 /* Active room — gold fill */
 .room--current {
-  --btn-border-radius: 0.75rem;
-  background-color: var(--color-primary-container) !important;
-  color: var(--color-surface-low) !important;
+  --btn-border-radius: 0.5rem;
+  background-color: color-mix(in srgb, var(--color-primary) 12%, transparent) !important;
+  color: var(--color-primary) !important;
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -260,14 +274,14 @@ body.sidebar {
 
 /* New room button — dashed, subtle */
 .rooms__new-btn {
-  color: rgba(255, 255, 255, 0.4) !important;
-  border: 1px dashed rgba(255, 255, 255, 0.15) !important;
-  background-color: transparent !important;
+  color: white !important;
+  border: none !important;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container)) !important;
+  border-radius: 9999px !important;
 }
 .rooms__new-btn:hover {
-  color: var(--color-primary-container) !important;
-  border-color: var(--color-primary-container) !important;
-  background-color: color-mix(in srgb, var(--color-primary) 8%, transparent) !important;
+  color: white !important;
+  filter: brightness(1.1) !important;
 }
 .rooms__new-btn img {
   filter: invert(100%) !important;
@@ -286,9 +300,12 @@ body.sidebar {
 
 .direct {
   color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 0.5rem;
 }
 .direct:hover {
-  color: white;
+  background-color: var(--color-surface-high);
+  color: var(--color-text);
 }
 
 .direct__new .avatar--icon {
@@ -308,7 +325,7 @@ body.sidebar {
 }
 
 .direct.unread .direct__author {
-  color: white;
+  color: var(--color-text);
 }
 .direct.unread .direct__author::after {
   background-color: var(--color-primary-container) !important;
@@ -402,6 +419,34 @@ html[data-theme="dark"] .message--me .message__body-content {
   background-color: color-mix(in srgb, var(--color-primary) 10%, transparent) !important;
   border-color: var(--color-primary-container) !important;
   animation: wiggle 0.4s both;
+}
+
+/* --- System messages — unboxed, centered, Inter uppercase --- */
+#system_welcome .message__body-content,
+.message--formatted.txt-align-center .message__body-content {
+  background: none !important;
+  border-radius: 0;
+  border: none !important;
+  box-shadow: none !important;
+  color: var(--color-text-variant) !important;
+  font-family: var(--font-system);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  padding: 0.5rem 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#system_welcome .message__avatar,
+.message--formatted.txt-align-center .message__avatar {
+  display: none;
+}
+
+#system_welcome .message__body,
+.message--formatted.txt-align-center .message__body {
+  justify-content: center;
+  max-inline-size: 100%;
 }
 
 /* --- Author name --- */

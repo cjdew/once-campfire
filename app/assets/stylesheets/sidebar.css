@@ -679,7 +679,7 @@ body:has(.sidebar--collapsed) {
 
 /* Context menu */
 .sidebar__context-menu {
-  background: var(--color-sidebar-bg, #1a1a2e);
+  background: var(--color-surface);
   padding: 0.25em;
   min-width: 140px;
 }
