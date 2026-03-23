@@ -174,18 +174,15 @@ body.sidebar {
   }
 }
 
-/* Tool icons — white, gold on hover */
+/* Tool icons — muted, gold on hover */
 .sidebar__tools .btn {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-variant);
 }
 .sidebar__tools .btn:hover {
-  color: var(--color-primary-container);
-}
-.sidebar__tools img {
-  filter: invert(100%) !important;
+  color: var(--color-primary);
 }
 .sidebar__tool .avatar {
-  border-color: rgba(255, 255, 255, 0.2) !important;
+  border-color: var(--color-outline-variant) !important;
 }
 
 
@@ -219,7 +216,7 @@ body.sidebar {
 }
 
 .sidebar__toggle img {
-  filter: invert(100%) !important;
+  filter: none !important;
 }
 
 /* Unread indicator dot on toggle — gold */
@@ -235,7 +232,7 @@ body.sidebar {
   border-radius: 0.5rem;
   transition: background-color 200ms ease, box-shadow 200ms ease;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: var(--color-text) !important;
   background-color: transparent !important;
 }
 
@@ -244,13 +241,13 @@ body.sidebar {
 }
 
 .room img:not(.avatar) {
-  filter: invert(100%) !important;
+  filter: none !important;
 }
 
 /* Unread rooms — gold ring */
 .room.unread {
   box-shadow: 0 0 0 1.5px var(--color-primary-container) !important;
-  color: white !important;
+  color: var(--color-text) !important;
   font-weight: 600;
 }
 .room.unread:not(:hover) {
@@ -272,19 +269,16 @@ body.sidebar {
   filter: invert(0%) !important;
 }
 
-/* New room button — dashed, subtle */
+/* New room button — gradient pill */
 .rooms__new-btn {
-  color: white !important;
+  color: var(--color-on-primary) !important;
   border: none !important;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container)) !important;
   border-radius: 9999px !important;
 }
 .rooms__new-btn:hover {
-  color: white !important;
+  color: var(--color-on-primary) !important;
   filter: brightness(1.1) !important;
-}
-.rooms__new-btn img {
-  filter: invert(100%) !important;
 }
 
 /* ============================================================================
@@ -292,14 +286,14 @@ body.sidebar {
    ============================================================================ */
 
 .directs {
-  border-block-end: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-block-end: 1px solid var(--color-surface-high) !important;
   padding-block-end: calc(var(--block-space-half) + 2px);
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
 .direct {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text);
   border: none;
   border-radius: 0.5rem;
 }
@@ -309,11 +303,8 @@ body.sidebar {
 }
 
 .direct__new .avatar--icon {
-  background-color: rgba(255, 255, 255, 0.1) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-}
-.direct__new .avatar--icon img {
-  filter: invert(100%) !important;
+  background-color: var(--color-surface-high) !important;
+  border-color: var(--color-outline-variant) !important;
 }
 
 .direct__author {
@@ -321,7 +312,7 @@ body.sidebar {
   font-size: 0.65rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--color-text-variant);
 }
 
 .direct.unread .direct__author {
@@ -331,10 +322,10 @@ body.sidebar {
   background-color: var(--color-primary-container) !important;
 }
 
-/* Sidebar avatars — dark-bg borders */
+/* Sidebar avatars */
 #sidebar .avatar {
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+  border-color: var(--color-outline-variant) !important;
+  box-shadow: none !important;
 }
 
 /* ============================================================================
