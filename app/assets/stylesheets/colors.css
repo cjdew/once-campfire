@@ -1,5 +1,36 @@
+/* ============================================================================
+   Color Token System — Campfire Air / Campfire Air Midnight
+   Single source of truth for all color tokens in both themes.
+
+   Toggle mechanism:
+   - html[data-theme="light"] → force light
+   - html[data-theme="dark"]  → force dark
+   - html (no data-theme)     → follow prefers-color-scheme (system default)
+   ============================================================================ */
+
 :root {
-  /* Named color values */
+  /* --- Light Mode (default) --- */
+  --color-bg: #f8fafb;
+  --color-surface-lowest: #ffffff;
+  --color-surface-low: #f0f4f6;
+  --color-surface: #f4f7f8;
+  --color-surface-high: #eaeff0;
+  --color-surface-highest: #e2e8ea;
+
+  --color-primary: #755c00;
+  --color-primary-container: #f3c41a;
+  --color-on-primary: #ffffff;
+
+  --color-text: #2c3436;
+  --color-text-variant: #596063;
+  --color-outline-variant: #acb3b6;
+
+  --color-negative: #ba1a1a;
+  --color-positive: #2e7d32;
+  --color-alert: #e65100;
+
+  /* --- oklch Legacy aliases (consumed by layout.css, utilities.css, panels.css, etc.) --- */
+  /* These allow files still using oklch(var(--lch-*)) to keep working. */
   --lch-black: 0% 0 0;
   --lch-white: 100% 0 0;
   --lch-gray: 96% 0.005 96;
@@ -13,23 +44,22 @@
   --lch-green: 65.59% 0.234 142.49;
   --lch-always-black: 0% 0 0;
 
-  /* Abstractions */
-  --color-negative: oklch(var(--lch-red));
-  --color-positive: oklch(var(--lch-green));
-  --color-bg: oklch(var(--lch-white));
-  --color-message-bg: oklch(var(--lch-gray));
-  --color-text: oklch(var(--lch-black));
-  --color-text-reversed: oklch(var(--lch-white));
-  --color-link: oklch(var(--lch-blue));
-  --color-border: oklch(var(--lch-gray));
-  --color-border-dark: oklch(var(--lch-gray-dark));
-  --color-border-darker: oklch(var(--lch-gray-darker));
-  --color-selected: oklch(var(--lch-blue-light));
-  --color-selected-dark: oklch(var(--lch-blue-dark));
-  --color-alert: oklch(var(--lch-orange));
+  /* --- Semantic aliases (consumed by existing component CSS) --- */
+  --color-message-bg: var(--color-surface-lowest);
+  --color-link: var(--color-primary);
+  --color-border: var(--color-surface-high);
+  --color-border-dark: var(--color-surface-highest);
+  --color-border-darker: var(--color-text-variant);
+  --color-selected: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --color-selected-dark: color-mix(in srgb, var(--color-primary) 20%, transparent);
+  --color-text-reversed: var(--color-on-primary);
+  --color-timestamp: var(--color-text-variant);
+}
 
-  /* Redefine named color values for dark mode */
-  @media (prefers-color-scheme: dark) {
+/* --- Dark Mode: System preference fallback --- */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]):not([data-theme="dark"]) {
+    /* oklch legacy overrides for dark mode */
     --lch-black: 100% 0 0;
     --lch-white: 0% 0 0;
     --lch-gray: 25.2% 0 0;
@@ -40,5 +70,58 @@
     --lch-blue-dark: 42.25% 0.07 248;
     --lch-red: 73.8% 0.184 29.18;
     --lch-green: 75% 0.21 141.89;
+
+    --color-bg: #0b1326;
+    --color-surface-lowest: #060e20;
+    --color-surface-low: #131b2e;
+    --color-surface: #171f33;
+    --color-surface-high: #222a3d;
+    --color-surface-highest: #2d3449;
+
+    --color-primary: #ffd555;
+    --color-primary-container: #e6b800;
+    --color-on-primary: #1a1400;
+
+    --color-text: #dae2fd;
+    --color-text-variant: #d1c5ac;
+    --color-outline-variant: #4e4633;
+
+    --color-negative: #ffb4ab;
+    --color-positive: #81c784;
+    --color-alert: #ffb74d;
   }
+}
+
+/* --- Dark Mode: Explicit override --- */
+html[data-theme="dark"] {
+  /* oklch legacy overrides for dark mode */
+  --lch-black: 100% 0 0;
+  --lch-white: 0% 0 0;
+  --lch-gray: 25.2% 0 0;
+  --lch-gray-dark: 30.12% 0 0;
+  --lch-gray-darker: 44.95% 0 0;
+  --lch-blue: 72.25% 0.16 248;
+  --lch-blue-light: 28.11% 0.053 248;
+  --lch-blue-dark: 42.25% 0.07 248;
+  --lch-red: 73.8% 0.184 29.18;
+  --lch-green: 75% 0.21 141.89;
+
+  --color-bg: #0b1326;
+  --color-surface-lowest: #060e20;
+  --color-surface-low: #131b2e;
+  --color-surface: #171f33;
+  --color-surface-high: #222a3d;
+  --color-surface-highest: #2d3449;
+
+  --color-primary: #ffd555;
+  --color-primary-container: #e6b800;
+  --color-on-primary: #1a1400;
+
+  --color-text: #dae2fd;
+  --color-text-variant: #d1c5ac;
+  --color-outline-variant: #4e4633;
+
+  --color-negative: #ffb4ab;
+  --color-positive: #81c784;
+  --color-alert: #ffb74d;
 }
