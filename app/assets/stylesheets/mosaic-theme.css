@@ -95,7 +95,7 @@ body.sidebar {
 /* Room name pill in nav */
 #nav .room--current {
   background-color: var(--color-surface-low) !important;
-  color: var(--color-primary) !important;
+  color: var(--color-text) !important;
   border-radius: 0.75rem;
 }
 
