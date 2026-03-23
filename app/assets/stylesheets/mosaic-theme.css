@@ -404,27 +404,6 @@ html[data-theme="dark"] .message--me .message__body-content {
   animation: wiggle 0.4s both;
 }
 
-/* --- Day separator — refined pill --- */
-.message__day-separator time,
-.message__day-separator span {
-  font-family: var(--font-family);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  background-color: white;
-  border: 1px solid var(--color-surface-high);
-  padding: 0.4em 1.5ch;
-  color: #64748b;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  border-radius: 9999px;
-}
-
-.message__day-separator::after,
-.message__day-separator::before {
-  border-top: none !important;
-}
-
 /* --- Author name --- */
 .message__author {
   font-family: var(--font-system);

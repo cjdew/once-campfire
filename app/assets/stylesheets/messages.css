@@ -158,23 +158,26 @@
 .message__day-separator {
   align-items: center;
   display: none;
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-family: var(--font-system, 'Inter', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 500;
   grid-area: sep;
-  grid-template-columns: 1fr auto 1fr;
   inline-size: 100%;
+  justify-content: center;
+  letter-spacing: 0.1em;
   margin-block: var(--message-space);
   text-align: center;
-  letter-spacing: 0.02em;
-  color: var(--color-timestamp);
+  text-transform: uppercase;
+  color: var(--color-text-variant);
 
   time, span {
-    padding: 0.5em 1.5ch;
+    background-color: var(--color-surface-high);
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
   }
 
   &::after, &::before {
-    border-top: 1px solid var(--color-border, rgba(128, 128, 128, 0.3));
-    content: "";
+    display: none;
   }
 }
 
