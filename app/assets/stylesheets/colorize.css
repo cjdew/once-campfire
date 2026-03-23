@@ -2,14 +2,26 @@
   filter: invert(100%);
 
   @media (prefers-color-scheme: dark) {
-    filter: invert(0%);
+    html:not([data-theme="light"]):not([data-theme="dark"]) & {
+      filter: invert(0%);
+    }
   }
+}
+
+html[data-theme="dark"] .colorize--white {
+  filter: invert(0%);
 }
 
 .colorize--black {
   filter: invert(0%);
 
   @media (prefers-color-scheme: dark) {
-    filter: invert(100%);
+    html:not([data-theme="light"]):not([data-theme="dark"]) & {
+      filter: invert(100%);
+    }
   }
+}
+
+html[data-theme="dark"] .colorize--black {
+  filter: invert(100%);
 }

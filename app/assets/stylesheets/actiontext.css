@@ -96,7 +96,7 @@ trix-editor {
   }
 
   @media (prefers-color-scheme: dark) {
-    &::before {
+    html:not([data-theme="light"]):not([data-theme="dark"]) &::before {
       filter: invert(100);
     }
   }
@@ -109,7 +109,7 @@ trix-editor {
     }
 
     @media (prefers-color-scheme: dark) {
-      &::before {
+      html:not([data-theme="light"]):not([data-theme="dark"]) &::before {
         filter: invert(0);
       }
     }
@@ -125,6 +125,14 @@ trix-editor {
       background-image: url("minus.svg");
     }
   }
+}
+
+html[data-theme="dark"] :is(.trix-button-group, .trix-button)::before {
+  filter: invert(100);
+}
+
+html[data-theme="dark"] :is(.trix-button-group, .trix-button).trix-active::before {
+  filter: invert(0);
 }
 
 [data-trix-content-type~='application/vnd.campfire.mention'] {

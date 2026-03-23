@@ -34,9 +34,15 @@
     position: absolute;
 
     @media (prefers-color-scheme: dark) {
-      filter: invert(100%);
+      html:not([data-theme="light"]):not([data-theme="dark"]) & {
+        filter: invert(100%);
+      }
     }
   }
+}
+
+html[data-theme="dark"] .banned .avatar:after {
+  filter: invert(100%);
 }
 
 .avatar--icon {

@@ -508,9 +508,15 @@ img.message__attachment {
     animation: wiggle 0.4s both;
 
     @media (prefers-color-scheme: dark) {
-      --message-background: oklch(var(--lch-red) / 0.2);
+      html:not([data-theme="light"]):not([data-theme="dark"]) & {
+        --message-background: oklch(var(--lch-red) / 0.2);
+      }
     }
   }
+}
+
+html[data-theme="dark"] .message--mentioned .message__body-content {
+  --message-background: oklch(var(--lch-red) / 0.2);
 }
 
 .message--threaded {
