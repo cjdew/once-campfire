@@ -95,7 +95,7 @@ body.sidebar {
 /* Room name pill in nav */
 #nav .room--current {
   background-color: var(--color-surface-low) !important;
-  color: var(--color-primary-container) !important;
+  color: var(--color-primary) !important;
   border-radius: 0.75rem;
 }
 
@@ -390,7 +390,7 @@ html[data-theme="dark"] .message--me .message__body-content {
 }
 
 .message--me .message__body-content .trix-content {
-  color: white !important;
+  color: var(--color-on-primary) !important;
 }
 
 .message--me .message__body-content a {
