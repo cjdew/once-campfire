@@ -92,10 +92,10 @@ body.sidebar {
 
 /* Mobile nav glassmorphism — handled by nav.css &::before */
 
-/* Room name pill in nav */
+/* Room name pill in nav — gold bg, black text in both themes */
 #nav .room--current {
-  background-color: var(--color-surface-low) !important;
-  color: var(--color-text) !important;
+  background-color: var(--color-primary-container) !important;
+  color: #1a1400 !important;
   border-radius: 0.75rem;
 }
 
