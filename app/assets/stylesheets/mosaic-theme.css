@@ -376,9 +376,9 @@ body.sidebar {
 /* Light: gold bg → black text */
 /* Dark: gold gradient → white text */
 .message--me .message__body-content {
-  background: var(--color-primary);
+  background: var(--color-primary-container) !important;
   border-radius: 1.5rem 1.5rem 1.5rem 0.25rem;
-  color: #1a1400;
+  color: #1a1400 !important;
 }
 
 html[data-theme="dark"] .message--me .message__body-content {
