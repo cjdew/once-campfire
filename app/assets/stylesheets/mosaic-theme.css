@@ -372,11 +372,11 @@ body.sidebar {
   border-color: var(--color-primary-container);
 }
 
-/* --- Own messages — primary color bubble --- */
+/* --- Own messages — primary color bubble, always black text --- */
 .message--me .message__body-content {
   background: var(--color-primary);
   border-radius: 1.5rem 1.5rem 0.25rem 1.5rem;
-  color: var(--color-on-primary);
+  color: #1a1400;
 }
 
 html[data-theme="dark"] .message--me .message__body-content {
@@ -390,11 +390,11 @@ html[data-theme="dark"] .message--me .message__body-content {
 }
 
 .message--me .message__body-content .trix-content {
-  color: var(--color-on-primary) !important;
+  color: #1a1400 !important;
 }
 
 .message--me .message__body-content a {
-  color: var(--color-primary-container) !important;
+  color: #4a3800 !important;
 }
 
 /* --- Emoji messages — transparent, no card --- */
