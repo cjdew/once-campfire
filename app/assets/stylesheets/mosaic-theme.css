@@ -347,6 +347,13 @@ body.sidebar {
   transition: border-color 200ms ease;
 }
 
+/* Received messages */
+.message .message__body-content {
+  background-color: var(--color-surface-lowest);
+  border-radius: 1.5rem 1.5rem 1.5rem 0.25rem;
+  color: var(--color-text);
+}
+
 /* Other users' messages — flat top-left corner */
 .message:not(.message--me):not(.message--emoji) .message__body-content {
   border-top-left-radius: 4px;
@@ -357,15 +364,21 @@ body.sidebar {
   border-color: var(--color-primary-container);
 }
 
-/* --- Own messages — dark bubble --- */
+/* --- Own messages — primary color bubble --- */
 .message--me .message__body-content {
-  --message-background: var(--color-surface-low) !important;
-  --message-color: white !important;
-  background-color: var(--color-surface-low) !important;
-  color: white !important;
-  border-color: var(--color-surface-low) !important;
-  border-bottom-right-radius: 4px;
-  box-shadow: 0 4px 12px rgba(24, 24, 24, 0.15);
+  background: var(--color-primary);
+  border-radius: 1.5rem 1.5rem 0.25rem 1.5rem;
+  color: var(--color-on-primary);
+}
+
+html[data-theme="dark"] .message--me .message__body-content {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]):not([data-theme="dark"]) .message--me .message__body-content {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-container));
+  }
 }
 
 .message--me .message__body-content .trix-content {
@@ -412,22 +425,19 @@ body.sidebar {
   border-top: none !important;
 }
 
-/* --- Author name — uppercase label --- */
+/* --- Author name --- */
 .message__author {
-  font-family: var(--font-family);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #475569;
+  font-family: var(--font-system);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 /* --- Permalink timestamps --- */
 .message__permalink {
-  font-family: var(--font-family);
-  font-size: 0.65rem;
-  letter-spacing: 0.01em;
-  color: #64748b;
+  font-family: var(--font-system);
+  font-size: 0.75rem;
+  color: var(--color-text-variant);
 }
 
 /* --- Attachments --- */
