@@ -51,7 +51,7 @@ html[data-theme="dark"] {
 }
 
 .hljs {
-  color: var(--color-txt);
+  color: var(--color-text);
   background: var(--color-bg);
 }
 
