@@ -23,6 +23,10 @@ class MessagesController < ApplicationController
 
     @message.broadcast_create
     deliver_webhooks_to_bots
+
+    if @message.thread?
+      head :ok
+    end
   rescue ActiveRecord::RecordNotFound
     render action: :room_not_found
   end
@@ -58,17 +62,17 @@ class MessagesController < ApplicationController
     def find_paged_messages
       case
       when params[:before].present?
-        @room.messages.with_creator.page_before(@room.messages.find(params[:before]))
+        @room.messages.root_messages.with_creator.page_before(@room.messages.find(params[:before]))
       when params[:after].present?
-        @room.messages.with_creator.page_after(@room.messages.find(params[:after]))
+        @room.messages.root_messages.with_creator.page_after(@room.messages.find(params[:after]))
       else
-        @room.messages.with_creator.last_page
+        @room.messages.root_messages.with_creator.last_page
       end
     end
 
 
     def message_params
-      params.require(:message).permit(:body, :attachment, :client_message_id)
+      params.require(:message).permit(:body, :attachment, :client_message_id, :parent_message_id)
     end
 
 

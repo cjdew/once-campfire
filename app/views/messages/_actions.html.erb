@@ -44,6 +44,15 @@
           <% end %>
         <% end %>
 
+        <% unless message.content_type.attachment? %>
+          <button type="button" class="btn message__action-btn center full-width"
+                  data-action="thread-sidebar#open"
+                  data-thread-sidebar-message-id-param="<%= message.thread? ? message.parent_message_id : message.id %>"
+                  title="Reply in thread" aria-label="Reply in thread">
+            <%= image_tag "reply.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
+          </button>
+        <% end %>
+
         <%= tag.button class: "btn message__action-btn center full-width", title: "Copy link", aria: { label: "Copy link" }, data: { controller: "copy-to-clipboard", action: "copy-to-clipboard#copy", copy_to_clipboard_success_class: "btn--success", copy_to_clipboard_content_value: url } do %>
           <%= image_tag "link.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
         <% end %>

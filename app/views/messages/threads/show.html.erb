@@ -1,0 +1,30 @@
+<div id="<%= dom_id(@parent_message, :thread_sidebar) %>" class="thread-sidebar__content">
+  <div class="thread-sidebar__header">
+    <h2 class="thread-sidebar__title">Thread</h2>
+    <button class="thread-sidebar__close btn" data-action="thread-sidebar#close" aria-label="Close thread">
+      <%= image_tag "cancel.svg", size: 16 %>
+    </button>
+  </div>
+
+  <div class="thread-sidebar__parent">
+    <%= render partial: "messages/message", locals: { message: @parent_message } %>
+  </div>
+
+  <div class="thread-sidebar__separator">
+    <span class="thread-sidebar__reply-count">
+      <%= pluralize(@replies.count, "reply") %>
+    </span>
+  </div>
+
+  <div id="<%= dom_id(@parent_message, :thread_replies) %>"
+       class="thread-sidebar__replies"
+       data-thread-sidebar-target="replies">
+    <% @replies.each do |reply| %>
+      <%= render partial: "messages/message", locals: { message: reply } %>
+    <% end %>
+  </div>
+
+  <%= turbo_stream_from @parent_message, :thread_replies %>
+
+  <%= render "messages/threads/composer", room: @room, parent_message: @parent_message %>
+</div>

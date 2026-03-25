@@ -44,8 +44,12 @@ class Room < ApplicationRecord
   end
 
   def receive(message)
-    unread_memberships(message)
-    push_later(message)
+    if message.thread?
+      MessageThread::PushReplyJob.perform_later(self, message)
+    else
+      unread_memberships(message)
+      push_later(message)
+    end
   end
 
   def open?

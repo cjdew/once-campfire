@@ -21,4 +21,12 @@
   <%= button_to_jump_to_newest_message %>
 <% end %>
 
+<div id="thread-sidebar"
+     class="thread-sidebar"
+     data-controller="thread-sidebar"
+     data-thread-sidebar-room-id-value="<%= @room.id %>">
+  <%# Thread content loaded via fetch into here %>
+</div>
+<div class="thread-sidebar__backdrop" data-action="click->thread-sidebar#close"></div>
+
 <%= render "rooms/show/composer", room: @room %>

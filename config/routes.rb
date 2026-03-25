@@ -64,7 +64,9 @@ Rails.application.routes.draw do
   end
 
   resources :rooms do
-    resources :messages
+    resources :messages do
+      resource :thread, only: [:show], controller: "messages/threads"
+    end
 
     post ":bot_key/messages", to: "messages/by_bots#create", as: :bot_messages
 

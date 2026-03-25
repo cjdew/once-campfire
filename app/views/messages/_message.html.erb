@@ -25,6 +25,7 @@
             <%= render "messages/actions", message: message, url: room_at_message_url(message.room, message) %>
           </div>
           <%= render "messages/presentation", message: message %>
+          <%= render "messages/reply_badge", message: message unless message.thread? %>
           <%= render "messages/boosts/boosts", message: message %>
         </div>
       </div>

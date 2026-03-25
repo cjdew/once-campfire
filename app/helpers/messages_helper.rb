@@ -37,6 +37,7 @@ module MessagesHelper
         messages_target: "message",
         search_results_target: "message",
         refresh_room_target: "message",
+        parent_message_id: message.parent_message_id,
         reply_composer_outlet: "#composer"
       }, &
   rescue Exception => e
