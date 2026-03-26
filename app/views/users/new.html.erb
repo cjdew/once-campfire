@@ -71,4 +71,13 @@
   </section>
 <% end %>
 
+<% if ENV["OIDC_CLIENT_ID"].present? %>
+  <div class="panel margin-block-start center" style="max-width: 28em;">
+    <%= button_to "Sign up with Entra ID", "/auth/entra_id", method: :post,
+        class: "btn btn--reversed center txt-large", style: "width: 100%",
+        data: { turbo: false },
+        params: { origin: join_path(params[:join_code]) } %>
+  </div>
+<% end %>
+
 <%= render "accounts/help_contact" %>

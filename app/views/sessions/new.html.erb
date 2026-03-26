@@ -38,7 +38,7 @@
 
   <% if ENV["OIDC_CLIENT_ID"].present? %>
     <div class="panel margin-block-start">
-      <%= button_to "Sign in with Entra ID", "/auth/entra_id", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%" %>
+      <%= button_to "Sign in with Entra ID", "/auth/entra_id", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%", data: { turbo: false } %>
     </div>
   <% end %>
 

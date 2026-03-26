@@ -6,7 +6,8 @@ if ENV["OIDC_CLIENT_ID"].present? && ENV["OIDC_CLIENT_SECRET"].present?
   Rails.application.config.middleware.use OmniAuth::Builder do
     provider :openid_connect,
       name: :entra_id,
-      scope: %i[openid profile email],
+      callback_path: "/auth/oidc/callback",
+      scope: %w[openid profile email],
       response_type: :code,
       issuer: ENV.fetch("OIDC_ISSUER", "https://login.microsoftonline.com/#{ENV['ENTRA_TENANT_ID'] || 'common'}/v2.0"),
       discovery: true,
@@ -17,10 +18,6 @@ if ENV["OIDC_CLIENT_ID"].present? && ENV["OIDC_CLIENT_SECRET"].present?
         scheme: ENV.fetch("CAMPFIRE_DOMAIN", nil) ? "https" : "http",
         host: ENV.fetch("CAMPFIRE_DOMAIN", "localhost"),
         port: ENV.fetch("CAMPFIRE_DOMAIN", nil) ? 443 : 3000
-      },
-      # Request an access token scoped to our API (for canvas-bot JWT validation)
-      extra_authorize_params: {
-        scope: "openid profile email api://#{ENV['OIDC_CLIENT_ID']}/access_as_user"
       }
   end
 
