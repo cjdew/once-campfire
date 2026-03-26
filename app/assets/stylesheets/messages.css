@@ -376,7 +376,6 @@ img.message__attachment {
 .message__edit-btn {
   display: none;
 
-  .admin &,
   .message--me & {
     display: inline-flex;
   }

@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Manages the thread sidebar panel: open, close, fetch content, keyboard shortcuts
 export default class extends Controller {
-  static targets = ["replies"]
+  static targets = ["panel", "replies"]
   static values = { roomId: Number }
 
   connect() {
@@ -21,10 +21,14 @@ export default class extends Controller {
     document.removeEventListener("keydown", this.handleKeydown)
   }
 
+  get panel() {
+    return this.hasPanelTarget ? this.panelTarget : this.element
+  }
+
   async open({ params: { messageId } }) {
     if (!messageId) return
 
-    this.element.classList.add("thread-sidebar--open")
+    this.panel.classList.add("thread-sidebar--open")
     this.currentMessageId = messageId
 
     // Update URL
@@ -41,7 +45,9 @@ export default class extends Controller {
         }
       })
       if (response.ok) {
-        this.element.innerHTML = await response.text()
+        this.panel.innerHTML = await response.text()
+        this.formatMessages()
+        this.observeNewReplies()
         this.scrollToBottom()
       }
     } catch (error) {
@@ -50,7 +56,8 @@ export default class extends Controller {
   }
 
   close() {
-    this.element.classList.remove("thread-sidebar--open")
+    if (this._observer) { this._observer.disconnect(); this._observer = null }
+    this.panel.classList.remove("thread-sidebar--open")
     this.currentMessageId = null
 
     // Remove thread param from URL
@@ -61,20 +68,20 @@ export default class extends Controller {
 
     // Clear content after animation
     setTimeout(() => {
-      if (!this.element.classList.contains("thread-sidebar--open")) {
-        this.element.innerHTML = ""
+      if (!this.panel.classList.contains("thread-sidebar--open")) {
+        this.panel.innerHTML = ""
       }
     }, 300)
   }
 
   handleKeydown(event) {
-    if (event.key === "Escape" && this.element.classList.contains("thread-sidebar--open")) {
+    if (event.key === "Escape" && this.panel.classList.contains("thread-sidebar--open")) {
       this.close()
     }
   }
 
   scrollToBottom() {
-    const replies = this.element.querySelector(".thread-sidebar__replies")
+    const replies = this.panel.querySelector(".thread-sidebar__replies")
     if (replies) {
       replies.scrollTop = replies.scrollHeight
     }
@@ -83,7 +90,7 @@ export default class extends Controller {
     const params = new URLSearchParams(window.location.search)
     const highlightId = params.get("highlight")
     if (highlightId) {
-      const target = this.element.querySelector(`#message_${highlightId}`)
+      const target = this.panel.querySelector(`#message_${highlightId}`)
       if (target) {
         target.scrollIntoView({ behavior: "smooth", block: "center" })
         target.classList.add("message--highlighted")
@@ -91,12 +98,34 @@ export default class extends Controller {
     }
   }
 
+  observeNewReplies() {
+    if (this._observer) this._observer.disconnect()
+    const repliesContainer = this.panel.querySelector(".thread-sidebar__replies")
+    if (!repliesContainer) return
+
+    this._observer = new MutationObserver(() => {
+      this.formatMessages()
+      this.scrollToBottom()
+    })
+    this._observer.observe(repliesContainer, { childList: true })
+  }
+
+  formatMessages() {
+    const userId = document.querySelector('meta[name="current-user-id"]')?.content
+    this.panel.querySelectorAll(".message").forEach(msg => {
+      msg.classList.add("message--formatted")
+      if (userId && msg.dataset.userId == userId) {
+        msg.classList.add("message--me")
+      }
+    })
+  }
+
   // Called when thread composer form submits
   submitReply(event) {
     // Only submit on Enter without Shift
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault()
-      const form = this.element.querySelector(".thread-composer")
+      const form = this.panel.querySelector(".thread-composer")
       if (form) form.requestSubmit()
     }
   }

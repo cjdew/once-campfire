@@ -39,12 +39,6 @@
             <%= image_tag "share.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
           <% end %>
         <% else %>
-          <%= tag.button class: "btn message__action-btn center full-width", data: { action: "reply#reply" }, title: "Reply", aria: { label: "Reply" } do %>
-            <%= image_tag "reply.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
-          <% end %>
-        <% end %>
-
-        <% unless message.content_type.attachment? %>
           <button type="button" class="btn message__action-btn center full-width"
                   data-action="thread-sidebar#open"
                   data-thread-sidebar-message-id-param="<%= message.thread? ? message.parent_message_id : message.id %>"

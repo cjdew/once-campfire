@@ -25,7 +25,11 @@ class MessagesController < ApplicationController
     deliver_webhooks_to_bots
 
     if @message.thread?
-      head :ok
+      render turbo_stream: turbo_stream.replace(
+        "thread_composer",
+        partial: "messages/threads/composer",
+        locals: { room: @room, parent_message: @message.parent_message }
+      )
     end
   rescue ActiveRecord::RecordNotFound
     render action: :room_not_found

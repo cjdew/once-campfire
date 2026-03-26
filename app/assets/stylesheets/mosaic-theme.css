@@ -773,6 +773,105 @@ body.sidebar {
   50% { outline-width: 3px; outline-offset: 3px; }
 }
 
+/* Secondary/ghost buttons */
+.btn--plain {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 15%, transparent);
+  border-radius: 9999px;
+  color: var(--color-primary);
+}
+
+/* --- Theme Toggle --- */
+.theme-toggle {
+  align-items: center;
+  background-color: var(--color-surface-high);
+  border-radius: 9999px;
+  display: flex;
+  gap: 0.15rem;
+  margin-inline-start: auto;
+  padding: 0.15rem;
+  pointer-events: auto;
+}
+
+.sidebar__tools .theme-toggle {
+  background-color: rgba(0, 0, 0, 0.08);
+  margin-inline-start: 0;
+}
+
+.sidebar__tools .theme-toggle__btn {
+  color: rgba(0, 0, 0, 0.4);
+  padding: 0.3rem;
+}
+
+.sidebar__tools .theme-toggle__btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.sidebar__tools .theme-toggle__btn.theme-toggle--active {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* Dark mode overrides */
+html[data-theme="dark"] .sidebar__tools .theme-toggle {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .sidebar__tools .theme-toggle__btn {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html[data-theme="dark"] .sidebar__tools .theme-toggle__btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="dark"] .sidebar__tools .theme-toggle__btn.theme-toggle--active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle__btn {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle__btn:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle__btn.theme-toggle--active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.theme-toggle__btn {
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  color: var(--color-text-variant);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.35rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.theme-toggle__btn:hover {
+  background-color: var(--color-surface-highest);
+  color: var(--color-text);
+}
+
+.theme-toggle__btn.theme-toggle--active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
 /* ============================================================================
    AVATARS
    ============================================================================ */
