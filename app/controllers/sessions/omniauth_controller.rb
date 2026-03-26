@@ -17,18 +17,20 @@ class Sessions::OmniauthController < ApplicationController
 
     user = User.active.find_by("LOWER(email_address) = ?", email)
     unless user
-      redirect_to new_session_url, alert: "No account found for #{email}. Contact an administrator."
-      return
+      # Auto-create account if arriving via a valid invite link
+      origin = request.env["omniauth.origin"].to_s
+      join_code = origin[%r{/join/([^/?]+)}, 1]
+
+      if join_code.present? && Current.account.join_code == join_code
+        name = auth.info.name.presence || email.split("@").first
+        user = User.create!(name: name, email_address: email, password: SecureRandom.hex(32))
+      else
+        redirect_to new_session_url, alert: "No account found for #{email}. Contact an administrator."
+        return
+      end
     end
 
     start_new_session_for(user)
-
-    # Store the API-scoped access token for the documents API (canvas-bot JWT validation).
-    # OmniAuth provides the token via credentials.token when we request the api:// scope.
-    if auth.credentials&.token.present?
-      session[:entra_access_token] = auth.credentials.token
-    end
-
     redirect_to post_authenticating_url
   end
 
