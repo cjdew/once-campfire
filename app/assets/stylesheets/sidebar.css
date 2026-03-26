@@ -66,10 +66,29 @@
   flex-shrink: 0;
   padding: 0.375em;
   border-radius: 0.375em;
-  opacity: 0.6;
+  color: rgba(0, 0, 0, 0.4);
+  opacity: 1;
 
   &:hover {
-    opacity: 1;
+    color: rgba(0, 0, 0, 0.7);
+  }
+}
+
+html[data-theme="dark"] .sidebar__tool--settings {
+  color: rgba(255, 255, 255, 0.5);
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .sidebar__tool--settings {
+    color: rgba(255, 255, 255, 0.5);
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
   }
 }
 

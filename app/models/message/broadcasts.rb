@@ -1,4 +1,6 @@
 module Message::Broadcasts
+  include ActionView::RecordIdentifier
+
   def broadcast_create
     if thread?
       # Append reply to thread sidebar
