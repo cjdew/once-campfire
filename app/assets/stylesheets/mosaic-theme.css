@@ -465,10 +465,10 @@ body.sidebar {
   background-color: var(--msh-accent-brand) !important;
 }
 
-/* Mobile: push nav header right to avoid hamburger overlap */
+/* Mobile: push nav header right to clear hamburger + add breathing room */
 @media (max-width: 100ch) {
   #nav {
-    padding-inline-start: calc(var(--inline-space) * 1.5 + var(--btn-size) + 0.5rem) !important;
+    padding-inline-start: calc(var(--inline-space) * 1.5 + var(--btn-size) + 1.5rem) !important;
   }
 }
 
@@ -600,6 +600,8 @@ body.sidebar {
 
 .messages {
   --message-space: 0.25rem !important;
+  /* Ensure messages start below the fixed nav header */
+  padding-block-start: calc(var(--btn-size, 2.5rem) + 1.5rem) !important;
 }
 
 /* --- Message spacing — consistent gaps per typography research --- */
