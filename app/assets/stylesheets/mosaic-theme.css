@@ -507,6 +507,20 @@ body.sidebar {
   filter: invert(100%) !important;
 }
 
+/* --- Sidebar section labels — visible structural anchors --- */
+.sidebar__section-label {
+  font-family: var(--msh-font-family);
+  font: var(--msh-type-section);
+  font-weight: var(--msh-type-section-wt);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--msh-text-on-sidebar-muted) !important;
+}
+
+.sidebar__section-header:hover .sidebar__section-label {
+  color: var(--msh-text-on-sidebar) !important;
+}
+
 /* ============================================================================
    DIRECT MESSAGES — Dark Theme
    ============================================================================ */
