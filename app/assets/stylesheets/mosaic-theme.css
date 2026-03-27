@@ -547,6 +547,11 @@ body.sidebar {
   --message-space: 0.25em;
 }
 
+/* --- Message grid — match column to 1.75rem avatar --- */
+.message {
+  grid-auto-columns: 1.75rem 1fr min-content !important;
+}
+
 /* --- Message rows — no card, no bubble --- */
 .message__body-content {
   --message-background: transparent;
@@ -571,7 +576,7 @@ body.sidebar {
 
 /* --- Own messages — left-aligned like everyone else, subtle accent bar --- */
 .message--me {
-  grid-auto-columns: var(--inline-space-double) 1fr min-content !important;
+  grid-auto-columns: 1.75rem 1fr min-content !important;
   grid-template-areas:
     "sep sep sep"
     "avatar body body" !important;
@@ -597,13 +602,20 @@ body.sidebar {
 
 .message--me .message__body {
   flex-direction: row !important;
-  max-inline-size: 100% !important;
+  max-inline-size: calc(100% - var(--btn-size, 2rem)) !important;
 }
 
 .message--me .message__actions {
   justify-content: start !important;
 }
-@media (min-width: 100ch) {
+@media (hover: hover) and (pointer: fine) {
+  /* Own-message toolbar: same top-right positioning as other messages */
+  .message--me .message__actions {
+    inset-inline-start: auto !important;
+    inset-inline-end: 0.5rem !important;
+  }
+}
+@media (hover: none) and (pointer: coarse) and (min-width: 100ch) {
   .message--me .message__actions {
     inset-inline-start: calc(100% + var(--message-column-gap) / 2) !important;
     inset-inline-end: auto !important;
@@ -612,7 +624,9 @@ body.sidebar {
 
 .message--me .message__body-content {
   color: var(--msh-text-primary, #16181D) !important;
-  background-color: transparent !important;
+  background-color: rgba(227, 181, 5, 0.04) !important;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.5rem !important;
 }
 
 .message--me .message__body-content .trix-content {
@@ -640,38 +654,60 @@ body.sidebar {
   animation: wiggle 0.4s both;
 }
 
-/* --- Relax message body max-width for row layout --- */
+/* --- Relax message body max-width for row layout, keep room for actions --- */
 .message__body {
-  max-inline-size: 100% !important;
+  max-inline-size: calc(100% - var(--btn-size, 2rem)) !important;
+  overflow: hidden;
 }
 
-/* --- Day separator — refined pill --- */
+/* --- Day separator — quiet centered line --- */
+.message__day-separator {
+  margin-block: 1.5rem 0.75rem;
+}
+
 .message__day-separator time,
 .message__day-separator span {
   font: var(--msh-type-tiny);
   font-weight: var(--msh-type-tiny-wt);
-  letter-spacing: 0.15em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  background-color: var(--msh-bg-surface, white);
-  border: 1px solid var(--msh-border-subtle);
-  padding: 0.4em 1.5ch;
   color: var(--msh-text-tertiary, #8B92A0);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  border-radius: 9999px;
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0 1.5ch;
 }
 
-.message__day-separator::after,
-.message__day-separator::before {
-  border-top: none !important;
+.message__day-separator::before,
+.message__day-separator::after {
+  content: "" !important;
+  display: block !important;
+  flex: 1;
+  height: 1px;
+  background-color: var(--msh-border-subtle);
 }
 
-/* --- Author name — semibold, standard case --- */
+.message--first-of-day .message__day-separator {
+  display: flex !important;
+  align-items: center;
+  gap: 1ch;
+  visibility: visible;
+}
+
+/* --- Author name — bold, prominent --- */
 .message__author {
-  font: var(--msh-type-sender);
-  font-weight: var(--msh-type-sender-wt);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: var(--msh-font-family);
   letter-spacing: -0.01em;
   text-transform: none;
-  color: var(--msh-text-secondary);
+  color: var(--msh-text-primary);
+}
+
+/* --- Hide timestamp on threaded (consecutive same-user) messages --- */
+.message--threaded .message__permalink {
+  display: none;
 }
 
 /* --- Permalink timestamps --- */
@@ -781,7 +817,10 @@ body.sidebar {
   color: var(--color-primary);
 }
 
-/* --- Theme Toggle --- */
+/* --- Theme Toggle (hidden — follows system preference) --- */
+.theme-toggle {
+  display: none !important;
+}
 .theme-toggle {
   align-items: center;
   background-color: var(--color-surface-high);
@@ -887,11 +926,54 @@ html[data-theme="dark"] .sidebar__tools .theme-toggle__btn.theme-toggle--active 
 }
 
 .message__avatar {
+  --avatar-size: 1.75rem !important;
   box-shadow: 0 0 0 var(--hover-size) var(--msh-bg-app);
 }
 
 .message__avatar .avatar {
+  width: 1.75rem;
+  height: 1.75rem;
   border-radius: 0.75rem;
+}
+
+/* Thread sidebar — slightly smaller avatars */
+.thread-sidebar .message__avatar {
+  --avatar-size: 1.5rem !important;
+}
+
+.thread-sidebar .message__avatar .avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.thread-sidebar .message {
+  grid-auto-columns: 1.5rem 1fr min-content !important;
+}
+
+/* Thread sidebar — parent message stands out */
+.thread-sidebar__parent {
+  background-color: var(--msh-bg-surface-subtle, rgba(0, 0, 0, 0.03)) !important;
+  border-block-end: 1px solid var(--msh-border-subtle) !important;
+}
+
+.thread-sidebar__parent .message__body-content {
+  font-size: 1rem !important;
+  line-height: 1.55;
+}
+
+.thread-sidebar__parent .message__author {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Thread sidebar — replies are visually quieter */
+.thread-sidebar__replies .message__body-content {
+  font-size: 0.9rem;
+}
+
+.thread-sidebar__replies .message__author {
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 /* ============================================================================
@@ -1007,12 +1089,137 @@ legend {
   letter-spacing: 0.02em;
 }
 
-.message__actions-menu {
-  border-radius: 0.75rem;
-  box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.06),
-    0 12px 24px rgba(0, 0, 0, 0.08);
-  border: 1px solid var(--msh-border-subtle);
+/* ============================================================================
+   INLINE MESSAGE ACTIONS — Slack-style hover toolbar
+   Replaces the three-dot dropdown with a compact inline toolbar that appears
+   on message hover. Shows emoji quick-reactions, reply, copy link, and edit
+   as a horizontal strip anchored to the top-right of the message.
+   ============================================================================ */
+
+/* --- Desktop: show actions as inline toolbar on hover --- */
+@media (hover: hover) and (pointer: fine) {
+
+  /* Hide the three-dot trigger button — toolbar replaces it */
+  .message__options-btn {
+    display: none !important;
+  }
+
+  /* Force the actions menu visible on message hover (bypass <details> toggle) */
+  .message:hover .message__actions-menu {
+    display: flex !important;
+  }
+
+  /* Reposition the actions container to top-right of message */
+  .message__actions {
+    position: absolute !important;
+    inset-block-start: -0.75rem;
+    inset-inline-end: 0.5rem;
+    z-index: 5;
+  }
+
+  /* Restyle the menu as a compact horizontal toolbar */
+  .message__actions-menu {
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    display: none;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0;
+    padding: 0.15rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid var(--msh-border-subtle);
+    background-color: var(--msh-bg-surface, #FFFFFF);
+    box-shadow:
+      0 1px 4px rgba(0, 0, 0, 0.06),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Remove the dropdown arrow pseudo-elements */
+  .message__actions-menu::before,
+  .message__actions-menu::after {
+    display: none !important;
+  }
+
+  /* Quick-boost emojis: horizontal row */
+  .message__actions-menu .quick-boosts {
+    display: flex !important;
+    grid-template-columns: none;
+    gap: 0;
+  }
+
+  /* Emoji buttons in the toolbar */
+  .message__actions-menu .quick-boosts .btn.message__action-btn {
+    padding: 0.2rem 0.3rem !important;
+    min-width: auto;
+    flex-basis: auto !important;
+  }
+
+  .message__actions-menu .quick-boosts .boost-character {
+    font-size: 1rem;
+  }
+
+  /* Hide the standalone "add boost" button in the quick-boosts row */
+  .message__actions-menu .message__boost-btn {
+    display: none !important;
+  }
+
+  /* Action buttons row: reply, copy link, edit — horizontal */
+  .message__actions-menu .message__actions-grid {
+    display: flex !important;
+    flex-wrap: nowrap;
+    border-top: none !important;
+    border-left: 1px solid var(--msh-border-subtle);
+    margin-block-start: 0 !important;
+    padding-block-start: 0 !important;
+    margin-inline-start: 0.15rem;
+    padding-inline-start: 0.15rem;
+    gap: 0;
+  }
+
+  .message__actions-menu .message__actions-grid .btn.message__action-btn {
+    padding: 0.25rem 0.35rem !important;
+    flex-basis: auto !important;
+    width: auto !important;
+  }
+
+  .message__actions-menu .message__actions-grid .btn.message__action-btn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Ensure the message has relative positioning for the toolbar anchor */
+  .message {
+    position: relative;
+  }
+
+  /* Subtle hover background on individual toolbar buttons */
+  .message__actions-menu .btn.message__action-btn:hover {
+    background-color: var(--msh-bg-surface-subtle) !important;
+    border-radius: 0.375rem;
+  }
+}
+
+/* --- Mobile: keep the existing dropdown behavior --- */
+@media (hover: none) and (pointer: coarse) {
+  .message__actions-menu {
+    border-radius: 0.75rem;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 12px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--msh-border-subtle);
+  }
+}
+
+/* --- Dark mode toolbar adjustments --- */
+@media (hover: hover) and (pointer: fine) and (prefers-color-scheme: dark) {
+  .message__actions-menu {
+    background-color: var(--msh-bg-surface-raised, #2A2A2A) !important;
+    border-color: var(--msh-border-strong, #404040);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .boost-item { border-radius: 0.5rem; }
@@ -1059,6 +1266,96 @@ legend {
 /* Show recent searches on desktop (upstream hides them) */
 .searches__recents {
   display: flex;
+}
+
+/* ============================================================================
+   SEARCH RESULTS — Compact Result Rows
+   ============================================================================ */
+
+/* Tighter spacing between search results */
+.searches__results.messages {
+  --message-space: 0 !important;
+  row-gap: 0 !important;
+}
+
+/* Each result gets a subtle bottom border */
+.searches__results .message {
+  border-bottom: 1px solid var(--msh-border-subtle);
+  padding-block: 0.75rem;
+  border-radius: 0 !important;
+}
+
+.searches__results .message:hover {
+  background-color: var(--msh-bg-surface-subtle);
+}
+
+/* Smaller avatars in search results */
+.searches__results .message__avatar {
+  --avatar-size: 1.25rem !important;
+  margin-top: 0.1rem;
+}
+
+.searches__results .message__avatar .avatar {
+  border-radius: 0.375rem;
+  border-width: 1px;
+}
+
+/* Show room name inline in search results */
+.searches__results .message__room {
+  display: inline !important;
+  visibility: visible !important;
+  font: var(--msh-type-meta);
+  font-weight: var(--msh-type-meta-wt);
+  color: var(--msh-text-tertiary);
+}
+
+.searches__results .message__room::before {
+  content: "·";
+  margin-inline: 0.5ch;
+  color: var(--msh-text-tertiary);
+}
+
+/* Match grid column to smaller avatar */
+.searches__results .message {
+  grid-auto-columns: 1.25rem 1fr min-content !important;
+}
+
+/* No own-message accent bar in search results */
+.searches__results .message--me {
+  border-left: none;
+}
+
+/* ============================================================================
+   SEARCH CHIPS — Recent Searches
+   ============================================================================ */
+
+.searches__recents .room.btn {
+  font: var(--msh-type-meta);
+  font-weight: 500;
+  color: var(--msh-text-secondary);
+  background-color: transparent;
+  border: 1px solid var(--msh-border-subtle);
+  border-radius: 0.75rem;
+  padding: 0.35rem 1rem;
+  max-height: 2.25rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.searches__recents .room.btn:hover {
+  background-color: var(--msh-bg-surface-subtle);
+  border-color: var(--msh-border-strong);
+}
+
+/* Active query chip */
+.searches__query .btn--reversed {
+  font: var(--msh-type-meta);
+  font-weight: 600;
+  background-color: var(--msh-accent-brand-tint) !important;
+  color: var(--msh-text-primary) !important;
+  border: 1px solid var(--msh-accent-brand) !important;
+  border-radius: 0.75rem;
+  padding: 0.35rem 1rem;
+  max-height: 2.25rem;
 }
 
 /* ============================================================================
