@@ -44,8 +44,12 @@ class Room < ApplicationRecord
   end
 
   def receive(message)
-    unread_memberships(message)
-    push_later(message)
+    if message.thread?
+      MessageThread::PushReplyJob.perform_later(self, message)
+    else
+      unread_memberships(message)
+      push_later(message)
+    end
   end
 
   def open?
@@ -66,7 +70,7 @@ class Room < ApplicationRecord
 
   private
     def unread_memberships(message)
-      memberships.visible.disconnected.where.not(user: message.creator).update_all(unread_at: message.created_at, updated_at: Time.current)
+      memberships.visible.where.not(user: message.creator).update_all(unread_at: message.created_at, updated_at: Time.current)
     end
 
     def push_later(message)

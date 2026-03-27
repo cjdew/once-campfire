@@ -1,0 +1,10 @@
+<%= turbo_frame_tag dom_id(message, :reply_badge) do %>
+  <% if message.replies_count > 0 %>
+    <a class="reply-badge"
+       href="#"
+       data-action="click->thread-sidebar#open"
+       data-thread-sidebar-message-id-param="<%= message.id %>">
+      <%= message.replies_count %> <%= "reply".pluralize(message.replies_count) %>
+    </a>
+  <% end %>
+<% end %>

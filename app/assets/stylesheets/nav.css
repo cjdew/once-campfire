@@ -36,7 +36,8 @@
       padding-block: var(--block-space-half);
 
       &::before {
-        background: linear-gradient(180deg, oklch(var(--lch-white)) 20%, oklch(var(--lch-white) / 0) 100%);
+        backdrop-filter: blur(24px);
+        background-color: color-mix(in srgb, var(--color-bg) 70%, transparent);
         content: "";
         inset: 0;
         position: absolute;

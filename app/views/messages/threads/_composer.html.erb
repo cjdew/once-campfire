@@ -1,0 +1,11 @@
+<div id="thread_composer" class="thread-sidebar__composer">
+  <%= form_with model: Message.new, url: room_messages_path(room), class: "thread-composer" do |form| %>
+    <%= form.hidden_field :parent_message_id, value: parent_message.id %>
+    <%= form.rich_text_area :body, class: "thread-composer__input",
+      placeholder: "Reply in thread...",
+      data: { action: "keydown.enter->thread-sidebar#submitReply" } %>
+    <div class="thread-composer__actions">
+      <%= form.submit "Reply", class: "btn btn--reversed" %>
+    </div>
+  <% end %>
+</div>

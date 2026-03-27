@@ -206,8 +206,14 @@ pre {
     vertical-align: text-top;
 
     @media (prefers-color-scheme: dark) {
-      filter: invert(100);
+      html:not([data-theme="light"]):not([data-theme="dark"]) & {
+        filter: invert(100);
+      }
     }
+  }
+
+  html[data-theme="dark"] & img {
+    filter: invert(100);
   }
 
   li {

@@ -1,0 +1,16 @@
+<div class="documents-dropdown" data-documents-target="dropdown">
+  <div class="documents-dropdown__header">
+    <span class="documents-dropdown__title">Documents</span>
+  </div>
+  <div class="documents-dropdown__list" data-documents-target="list">
+    <div class="documents-empty">Click to load documents.</div>
+  </div>
+  <div class="documents-dropdown__footer">
+    <button class="documents-create-btn" data-action="click->documents#showCreateForm">+ New Document</button>
+    <form class="documents-create-form" data-action="submit->documents#createDocument">
+      <label class="for-screen-reader" for="document-title-input">Document title</label>
+      <input type="text" id="document-title-input" placeholder="Document title..." data-documents-target="titleInput" data-action="input->documents#onTitleInput" class="documents-create-input" />
+      <button type="submit" class="btn btn--reversed documents-create-submit" data-documents-target="submitBtn" disabled>Create</button>
+    </form>
+  </div>
+</div>

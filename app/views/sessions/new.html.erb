@@ -8,10 +8,12 @@
     <%= form_with url: session_url, class: "flex flex-column gap" do |form| %>
       <fieldset class="flex flex-column gap center-block upad">
         <legend class="txt-large txt-align-center"><strong><%= Current.account.name %></strong></legend>
+        <h1 class="for-screen-reader">Sign in</h1>
 
         <div class="flex align-center gap">
           <%= translation_button(:email_address) %>
           <label class="flex align-center gap input input--actor txt-large">
+            <span class="for-screen-reader">Email address</span>
             <%= form.email_field :email_address, required: true, class: "input", autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %>
             <%= image_tag "email.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
           </label>
@@ -20,6 +22,7 @@
         <div class="flex align-center gap">
           <%= translation_button(:password) %>
           <label class="flex align-center gap input input--actor txt-large">
+            <span class="for-screen-reader">Password</span>
             <%= form.password_field :password, required: true, class: "input", autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %>
             <%= image_tag "password.svg", aria: { hidden: "true" }, size: 24, class: "colorize--black" %>
           </label>
@@ -32,6 +35,12 @@
       </fieldset>
     <% end %>
   </div>
+
+  <% if ENV["OIDC_CLIENT_ID"].present? %>
+    <div class="panel margin-block-start">
+      <%= button_to "Sign in with Entra ID", "/auth/entra_id", method: :post, class: "btn btn--reversed center txt-large", style: "width: 100%", data: { turbo: false } %>
+    </div>
+  <% end %>
 
   <%= render "accounts/help_contact" %>
 </section>

@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, interactive-widget=resizes-content">
     <meta name="view-transition" content="same-origin">
     <meta name="color-scheme" content="light dark">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#f8fafb">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -21,12 +20,44 @@
     <%= tag.link rel: "icon", href: fresh_account_logo_path, type: "image/png" %>
     <%= tag.link rel: "apple-touch-icon", href: fresh_account_logo_path %>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+      (function() {
+        var s = localStorage.getItem('campfire:theme');
+        if (s === 'light' || s === 'dark') document.documentElement.setAttribute('data-theme', s);
+        var d = s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme:dark)').matches);
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', d ? '#0b1326' : '#f8fafb');
+      })();
+    </script>
+
     <%= stylesheet_link_tag :all, "data-turbo-track": "reload" %>
     <%= custom_styles_tag %>
 
     <%= javascript_importmap_tags %>
 
+    <%= tag.meta name: "entra-token", content: current_user_entra_token %>
     <%= yield :head %>
+
+    <% if ENV["ONESIGNAL_APP_ID"].present? %>
+      <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+      <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+        OneSignalDeferred.push(async function(OneSignal) {
+          await OneSignal.init({
+            appId: "<%= ENV['ONESIGNAL_APP_ID'] %>",
+            serviceWorkerPath: "/push/OneSignalSDKWorker.js",
+            serviceWorkerParam: { scope: "/push/" },
+          });
+          <% if defined?(Current) && Current.user %>
+            await OneSignal.login("<%= Current.user.email_address.downcase %>");
+          <% end %>
+        });
+      </script>
+    <% end %>
   </head>
 
   <body class="<%= body_classes %>" data-controller="local-time lightbox">
@@ -57,14 +88,17 @@
       </footer>
     </main>
 
-    <aside id="sidebar" data-controller="toggle-class" data-toggle-class-toggle-class="open">
+    <aside id="sidebar" data-controller="toggle-class sidebar-collapse" data-toggle-class-toggle-class="open" data-sidebar-collapse-collapsed-class="sidebar--collapsed">
+      <button class="btn sidebar__toggle" data-action="toggle-class#toggle" aria-label="Toggle sidebar">
+        <%= image_tag "menu.svg", size: 20, aria: { hidden: "true" }, class: "colorize--white" %>
+      </button>
       <%= yield :sidebar %>
     </aside>
 
     <%= render "layouts/lightbox" %>
 
     <a href="https://once.com" id="app-logo" target="_blank" aria-label="Once software from 37signals home page">
-      <%= image_tag "campfire-icon.png", alt: "Campfire logo", width: 256, height: 216 %>
+      <%= image_tag "tessera-icon.png", alt: "Tessera logo", width: 256, height: 216 %>
     </a>
   </body>
 </html>

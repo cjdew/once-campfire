@@ -1,0 +1,2034 @@
+/* ============================================================================
+   Mosaic Chat Theme v3.0 — "Utility Refresh"
+   Custom theme for Mosaic Campfire chat
+
+   Slack-like utility layout with row-based messages, DM Sans typography,
+   dark left sidebar, gold accent system. Mobile-first, desktop-enhanced.
+
+   Overrides Campfire's default styles via Propshaft alphabetical load order.
+   ============================================================================
+
+   TOKEN MAP (Engineering Handoff)
+   ===============================
+
+   SURFACES
+   ──────────────────────────────────────────────────────────────
+   --msh-bg-app              │ #F5F6F7  │ Main app background
+   --msh-bg-surface          │ #FFFFFF  │ Cards, modals, composer
+   --msh-bg-surface-subtle   │ #F0F2F4  │ Hover, selected, input bg
+   --msh-bg-input            │ #FFFFFF  │ Input fields
+   --msh-bg-sidebar          │ #181818  │ Sidebar background
+   --msh-bg-sidebar-hover    │ w/0.05   │ Sidebar item hover
+   --msh-bg-sidebar-tools    │ w/0.05   │ Sidebar tools bar
+   --msh-bg-code             │ #f1f5f9  │ Code block background
+
+   TEXT HIERARCHY
+   ──────────────────────────────────────────────────────────────
+   --msh-text-primary        │ #16181D  │ Message body, headings
+   --msh-text-secondary      │ #5F6672  │ Sender names, labels
+   --msh-text-tertiary       │ #6E7787  │ Timestamps, meta, hints (4.6:1 AA)
+   --msh-text-on-sidebar     │ w/0.7    │ Default sidebar text
+   --msh-text-on-sidebar-strong │ #FFF  │ Active/unread sidebar
+   --msh-text-on-sidebar-muted  │ w/0.5 │ DM author names
+
+   BORDERS
+   ──────────────────────────────────────────────────────────────
+   --msh-border-subtle       │ #DFE3E8  │ Default borders
+   --msh-border-strong       │ #B8C0CC  │ Focus, active, emphasis
+   --msh-border-avatar       │ #d1d5db  │ Avatar ring
+   --msh-border-sidebar      │ w/0.1    │ Sidebar dividers
+
+   BRAND ACCENT (yellow — never as text on white)
+   ──────────────────────────────────────────────────────────────
+   --msh-accent-brand        │ #E3B505  │ CTA, badges, active
+   --msh-accent-brand-hover  │ #C99F05  │ Hover state
+   --msh-accent-brand-soft   │ E3B505/12│ Focus ring, soft fill
+   --msh-accent-brand-tint   │ E3B505/08│ Subtle bg tint
+
+   STATE
+   ──────────────────────────────────────────────────────────────
+   --msh-state-mention-bg    │ E3B505/08│ Mention row highlight
+   --msh-state-unread-ring   │ accent   │ Unread room ring
+   --msh-link-default        │ #2E5AAC  │ Links
+
+   MISC
+   ──────────────────────────────────────────────────────────────
+   --msh-scrollbar-thumb     │ #D1D1D1  │ Main scrollbar
+   --msh-scrollbar-thumb-sidebar │ w/0.15 │ Sidebar scrollbar
+
+   TYPOGRAPHY SCALE
+   ===============================
+
+   Role                │ Mobile            │ Desktop (>100ch)
+   ────────────────────┼───────────────────┼──────────────────
+   Header / room title │ 20/26  wt 600     │ 22/28  wt 600
+   Section label       │ 12/16  wt 700 UC  │ (same)
+   Sender name         │ 15/20  wt 600     │ 14/20  wt 600
+   Message body        │ 16/24  wt 400     │ 15/22  wt 400
+   Compact body        │ 15/22  wt 400     │ (same)
+   Timestamp           │ 13/18  wt 400     │ 12/16  wt 400
+   Meta text           │ 13/18  wt 400     │ 13/18  wt 400
+   Tiny (system/meta)  │ 12/16  wt 500     │ (same)
+   Composer input      │ 17/24  wt 400     │ 15/22  wt 400
+   Button label        │ 15/20  wt 600     │ (same)
+
+   Font: DM Sans only. No secondary font in chat surfaces.
+   Rule: Use weight, color, spacing for hierarchy — never a second font.
+
+   LEGACY TOKENS (FROZEN)
+   ===============================
+   --mosaic-gold, --mosaic-gold-soft, --mosaic-gold-hover,
+   --mosaic-black, --mosaic-charcoal, --mosaic-warm-white, --mosaic-border
+
+   These are aliased to --msh-* and exist only for backward compatibility.
+   Do NOT use in new styles.
+
+   ============================================================================ */
+
+/* --- Typography --- */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+/* --- Color System --- */
+:root {
+  /* Upstream Campfire OKLch remaps — keep for upstream CSS compatibility */
+  --lch-blue: 87% 0.16 85;
+  --lch-blue-light: 96% 0.035 85;
+  --lch-blue-dark: 78% 0.12 85;
+  --lch-gray: 96.5% 0.006 80;
+  --lch-gray-dark: 92.5% 0.008 80;
+  --lch-gray-darker: 76% 0.008 80;
+  --lch-green: 68% 0.2 148;
+
+  /* ==========================================================================
+     MSH Token Layer — Single Source of Truth
+     All chat UI styles reference these tokens exclusively.
+     ========================================================================== */
+
+  /* --- Typography --- */
+  --msh-font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Type scale — Mobile-first (overridden at desktop breakpoint below) */
+  --msh-type-header:    20px / 26px var(--msh-font-family);  /* App header / room title */
+  --msh-type-header-wt: 600;
+  --msh-type-section:   12px / 16px var(--msh-font-family);  /* Section labels */
+  --msh-type-section-wt: 700;
+  --msh-type-sender:    15px / 20px var(--msh-font-family);  /* Sender name */
+  --msh-type-sender-wt: 600;
+  --msh-type-body:      16px / 24px var(--msh-font-family);  /* Message body */
+  --msh-type-body-wt:   400;
+  --msh-type-body-compact: 15px / 22px var(--msh-font-family); /* Compact body */
+  --msh-type-timestamp: 13px / 18px var(--msh-font-family);  /* Timestamps */
+  --msh-type-timestamp-wt: 400;
+  --msh-type-meta:      13px / 18px var(--msh-font-family);  /* Meta text */
+  --msh-type-meta-wt:   400;
+  --msh-type-tiny:      12px / 16px var(--msh-font-family);  /* System/meta tiny */
+  --msh-type-tiny-wt:   500;
+  --msh-type-composer:  17px / 24px var(--msh-font-family);  /* Composer input */
+  --msh-type-composer-wt: 400;
+  --msh-type-button:    15px / 20px var(--msh-font-family);  /* Button labels */
+  --msh-type-button-wt: 600;
+
+  /* --- Surfaces --- */
+  --msh-bg-app: #F5F6F7;
+  --msh-bg-surface: #FFFFFF;
+  --msh-bg-surface-subtle: #F0F2F4;
+  --msh-bg-input: #FFFFFF;
+  --msh-bg-sidebar: #181818;
+  --msh-bg-sidebar-hover: rgba(255, 255, 255, 0.05);
+  --msh-bg-sidebar-tools: rgba(255, 255, 255, 0.05);
+  --msh-bg-code: #f1f5f9;
+
+  /* --- Text --- */
+  --msh-text-primary: #16181D;
+  --msh-text-secondary: #5F6672;
+  --msh-text-tertiary: #6E7787;
+  --msh-text-on-sidebar: rgba(255, 255, 255, 0.7);
+  --msh-text-on-sidebar-strong: #FFFFFF;
+  --msh-text-on-sidebar-muted: rgba(255, 255, 255, 0.5);
+
+  /* --- Borders --- */
+  --msh-border-subtle: #DFE3E8;
+  --msh-border-strong: #B8C0CC;
+  --msh-border-avatar: #d1d5db;
+  --msh-border-sidebar: rgba(255, 255, 255, 0.1);
+
+  /* --- Brand accent --- */
+  --msh-accent-brand: #E3B505;
+  --msh-accent-brand-hover: #C99F05;
+  --msh-accent-brand-soft: rgba(227, 181, 5, 0.12);
+  --msh-accent-brand-tint: rgba(227, 181, 5, 0.08);
+
+  /* --- State --- */
+  --msh-state-mention-bg: rgba(227, 181, 5, 0.08);
+  --msh-state-unread-ring: var(--msh-accent-brand);
+  --msh-link-default: #2E5AAC;
+
+  /* --- Scrollbar --- */
+  --msh-scrollbar-thumb: #D1D1D1;
+  --msh-scrollbar-thumb-sidebar: rgba(255, 255, 255, 0.15);
+
+  /* ==========================================================================
+     FROZEN: Legacy --mosaic-* tokens (aliased to --msh-* for compatibility)
+     These exist only for code that hasn't been migrated yet.
+     Do NOT use in new styles — use --msh-* tokens instead.
+     ========================================================================== */
+  --mosaic-gold: var(--msh-accent-brand);
+  --mosaic-gold-soft: var(--msh-accent-brand-soft);
+  --mosaic-gold-hover: var(--msh-accent-brand-hover);
+  --mosaic-black: var(--msh-bg-sidebar);
+  --mosaic-charcoal: #1e1e1e;
+  --mosaic-warm-white: var(--msh-bg-app);
+  --mosaic-border: var(--msh-border-subtle);
+
+  /* Legacy typography alias */
+  --font-family: var(--msh-font-family);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Upstream OKLch dark remaps */
+    --lch-blue: 78% 0.14 85;
+    --lch-blue-light: 28% 0.05 85;
+    --lch-blue-dark: 45% 0.09 85;
+    --lch-gray: 22% 0.005 80;
+    --lch-gray-dark: 27% 0.005 80;
+    --lch-gray-darker: 42% 0.008 80;
+
+    /* MSH dark mode overrides */
+    --msh-bg-app: #141414;
+    --msh-bg-surface: #1e1e1e;
+    --msh-bg-surface-subtle: #252525;
+    --msh-bg-input: #1e1e1e;
+    --msh-bg-code: #1e293b;
+    --msh-text-primary: #E8E8E8;
+    --msh-text-secondary: #9CA3AF;
+    --msh-text-tertiary: #8A909B;
+    --msh-border-subtle: #2e2e2e;
+    --msh-border-strong: #444444;
+    --msh-border-avatar: #444444;
+    --msh-state-mention-bg: rgba(227, 181, 5, 0.15);
+    --msh-link-default: #7BA4E0;
+    --msh-scrollbar-thumb: #444444;
+
+    /* Dark mode weight reduction — irradiation illusion compensation */
+    --msh-type-body-wt: 380;
+    --msh-type-sender-wt: 550;
+    --msh-type-header-wt: 550;
+    --msh-type-button-wt: 550;
+    --msh-type-section-wt: 650;
+    --msh-type-tiny-wt: 450;
+  }
+}
+
+/* Dark mode: slightly more open letter-spacing */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    letter-spacing: -0.005em;
+  }
+}
+
+/* Desktop type scale overrides */
+@media (min-width: 100ch) {
+  :root {
+    --msh-type-header:    22px / 28px var(--msh-font-family);
+    --msh-type-sender:    14px / 20px var(--msh-font-family);
+    --msh-type-body:      15px / 22px var(--msh-font-family);
+    --msh-type-timestamp: 12px / 16px var(--msh-font-family);
+    --msh-type-meta:      13px / 18px var(--msh-font-family);
+    --msh-type-composer:  15px / 22px var(--msh-font-family);
+  }
+}
+
+/* --- Base Typography --- */
+html, body {
+  font-family: var(--msh-font-family);
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Scrollbar --- */
+* {
+  scrollbar-color: var(--msh-scrollbar-thumb) transparent;
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: var(--msh-scrollbar-thumb); border-radius: 10px; }
+*::-webkit-scrollbar-thumb:hover { background: var(--msh-accent-brand); }
+
+/* Sidebar scrollbar — light on dark */
+#sidebar * { scrollbar-color: var(--msh-scrollbar-thumb-sidebar) transparent; }
+#sidebar *::-webkit-scrollbar-thumb { background: var(--msh-scrollbar-thumb-sidebar); }
+#sidebar *::-webkit-scrollbar-thumb:hover { background: var(--msh-accent-brand); }
+
+/* ============================================================================
+   LAYOUT — Sidebar LEFT, Main RIGHT
+   ============================================================================ */
+
+body {
+  background-color: var(--msh-bg-app);
+}
+
+/* Flip the grid: sidebar on the left */
+body.sidebar {
+  grid-template-areas:
+    "sidebar nav"
+    "sidebar main" !important;
+  grid-template-columns: var(--sidebar-width) 1fr !important;
+}
+
+#main-content {
+  background-color: var(--msh-bg-app);
+}
+
+/* Main content border on left edge (adjacent to sidebar) */
+.sidebar #main-content {
+  @media (min-width: 100ch) {
+    border-inline-start: 1px solid var(--msh-border-subtle) !important;
+    border-inline-end: none !important;
+    margin-inline: 0 !important;
+  }
+}
+
+/* Hide the 37signals/Once logo */
+#app-logo {
+  display: none !important;
+}
+
+/* ============================================================================
+   NAVIGATION BAR — White Header
+   ============================================================================ */
+
+#nav {
+  border-block-end: 1px solid var(--msh-border-subtle);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Fix nav positioning for left sidebar on desktop */
+.sidebar #nav {
+  @media (min-width: 100ch) {
+    margin-inline-start: 0 !important;
+    inset-inline-start: var(--sidebar-width) !important;
+    inset-inline-end: 0 !important;
+  }
+}
+
+/* Mobile nav gradient */
+@media (max-width: 100ch) {
+  .sidebar #nav::before {
+    background: linear-gradient(
+      180deg,
+      var(--msh-bg-app) 30%,
+      rgba(245, 245, 245, 0) 100%
+    ) !important;
+  }
+}
+
+/* Room name pill in nav */
+#nav .room--current {
+  background-color: var(--msh-bg-sidebar) !important;
+  color: var(--msh-accent-brand) !important;
+  border-radius: 0.75rem;
+}
+
+#nav .room--current .room__contents {
+  font-family: var(--msh-font-family);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Reposition room--current left margin for left sidebar */
+@media (min-width: 100ch) {
+  #nav:has(.room--current) .room--current {
+    margin-inline-start: 0 !important;
+  }
+  #nav:has(.room--current) .account-logo {
+    margin-inline-start: 0 !important;
+  }
+}
+
+/* Nav button hover */
+#nav .btn:not(.room--current):hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 0.5rem;
+}
+
+/* ============================================================================
+   SIDEBAR — Dark Theme
+   ============================================================================ */
+
+/* Solid dark background — replaces glass morphism */
+.sidebar #sidebar {
+  background-color: var(--msh-bg-sidebar) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-inline-start: none !important;
+  border-inline-end: none !important;
+  color: white;
+}
+
+@media (min-width: 100ch) {
+  .sidebar #sidebar {
+    background-color: var(--msh-bg-sidebar) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Mobile: sidebar slides from LEFT instead of right */
+@media (max-width: 100ch) {
+  .sidebar #sidebar {
+    transform: translate(-100%) !important;
+  }
+  .sidebar #sidebar.open {
+    transform: translate(0) !important;
+  }
+}
+
+/* Sidebar container text */
+.sidebar__container {
+  color: white;
+}
+
+/* --- Sidebar Tools Bar (bottom) --- */
+.sidebar__tools {
+  background-color: var(--msh-bg-sidebar-tools) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-block-start: 1px solid var(--msh-border-sidebar) !important;
+}
+
+/* Anchor tools bar to LEFT for left sidebar */
+@media (min-width: 100ch) {
+  .sidebar__tools {
+    inset-inline-start: 0 !important;
+    inset-inline-end: auto !important;
+  }
+}
+
+/* Tool icons — white, gold on hover */
+.sidebar__tools .btn {
+  color: rgba(255, 255, 255, 0.6);
+}
+.sidebar__tools .btn:hover {
+  color: var(--msh-accent-brand);
+}
+.sidebar__tools img {
+  filter: invert(100%) !important;
+}
+.sidebar__tool .avatar {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* --- Sidebar Toggle (mobile hamburger) --- */
+/* Reposition for left sidebar: stick out to the RIGHT */
+.sidebar__toggle {
+  inset-inline-start: auto !important;
+  inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1) !important;
+}
+
+#sidebar.open .sidebar__toggle {
+  @media (max-width: 100ch) {
+    inset-inline-start: auto !important;
+    inset-inline-end: var(--sidebar-inline-space) !important;
+  }
+}
+
+#sidebar.open .sidebar__toggle img {
+  filter: invert(100%) !important;
+}
+
+/* Unread indicator dot on toggle — gold */
+#sidebar:where(:not(.open):has(.unread)) .sidebar__toggle::after {
+  background-color: var(--msh-accent-brand) !important;
+}
+
+/* ============================================================================
+   ROOM LIST — Dark Cards with Gold Active
+   ============================================================================ */
+
+.room {
+  border-radius: 0.75rem;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+  font-weight: 500;
+  color: var(--msh-text-on-sidebar) !important;
+  background-color: transparent !important;
+}
+
+.room:hover {
+  background-color: var(--msh-bg-sidebar-hover) !important;
+}
+
+.room img:not(.avatar) {
+  filter: invert(100%) !important;
+}
+
+/* Unread rooms — gold ring */
+.room.unread {
+  box-shadow: 0 0 0 1.5px var(--msh-state-unread-ring) !important;
+  color: var(--msh-text-on-sidebar-strong) !important;
+  font-weight: 600;
+}
+.room.unread:not(:hover) {
+  box-shadow: 0 0 0 1.5px var(--msh-state-unread-ring) !important;
+}
+
+/* Active room — accent bar + subtle tint */
+.room--current {
+  --btn-border-radius: 0.75rem;
+  background-color: var(--msh-accent-brand-tint) !important;
+  color: var(--msh-text-on-sidebar-strong) !important;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  border-left: 3px solid var(--msh-accent-brand);
+}
+.room--current:where(:not(:active):hover) {
+  background-color: var(--msh-accent-brand-soft) !important;
+}
+.room--current img:not(.avatar) {
+  filter: invert(100%) !important;
+}
+
+/* New room button — dashed, subtle */
+.rooms__new-btn {
+  color: rgba(255, 255, 255, 0.4) !important;
+  border: 1px dashed rgba(255, 255, 255, 0.15) !important;
+  background-color: transparent !important;
+}
+.rooms__new-btn:hover {
+  color: var(--msh-accent-brand) !important;
+  border-color: var(--msh-accent-brand) !important;
+  background-color: var(--msh-accent-brand-tint) !important;
+}
+.rooms__new-btn img {
+  filter: invert(100%) !important;
+}
+
+/* --- Sidebar section labels — visible structural anchors --- */
+.sidebar__section-label {
+  font-family: var(--msh-font-family);
+  font: var(--msh-type-section);
+  font-weight: var(--msh-type-section-wt);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--msh-text-on-sidebar-muted) !important;
+}
+
+.sidebar__section-header:hover .sidebar__section-label {
+  color: var(--msh-text-on-sidebar) !important;
+}
+
+/* ============================================================================
+   DIRECT MESSAGES — Dark Theme
+   ============================================================================ */
+
+.directs {
+  border-block-end: 1px solid var(--msh-border-sidebar) !important;
+  padding-block-end: calc(var(--block-space-half) + 2px);
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.direct {
+  color: var(--msh-text-on-sidebar);
+}
+.direct:hover {
+  color: white;
+}
+
+.direct__new .avatar--icon {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+.direct__new .avatar--icon img {
+  filter: invert(100%) !important;
+}
+
+.direct__author {
+  font-family: var(--msh-font-family);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--msh-text-on-sidebar-muted);
+}
+
+.direct.unread .direct__author {
+  color: white;
+}
+.direct.unread .direct__author::after {
+  background-color: var(--msh-accent-brand) !important;
+}
+
+/* Sidebar avatars — dark-bg borders */
+#sidebar .avatar {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* ============================================================================
+   MESSAGES — Row-Based Layout (Slack-like)
+   ============================================================================ */
+
+.messages {
+  --message-space: 0.25rem !important;
+}
+
+/* --- Message spacing — consistent gaps per typography research --- */
+/* First message from a new sender gets more space above */
+.message:not(.message--threaded) {
+  margin-block-start: 0.75rem;
+}
+
+/* Consecutive same-sender messages: tight grouping */
+.message.message--threaded {
+  margin-block-start: 0.125rem;
+}
+
+/* First message in the list: no top margin */
+.message:first-child {
+  margin-block-start: 0;
+}
+
+/* --- Message grid — match column to 1.75rem avatar --- */
+.message {
+  grid-auto-columns: 1.75rem 1fr min-content !important;
+}
+
+/* --- Message rows — no card, no bubble --- */
+.message__body-content {
+  --message-background: transparent;
+  --message-color: var(--msh-text-primary, #16181D);
+  background-color: transparent !important;
+  color: var(--msh-text-primary, #16181D) !important;
+  border-radius: 0.25rem;
+  border: none !important;
+  box-shadow: none !important;
+  line-height: 1.55;
+  font: var(--msh-type-body);
+  font-weight: var(--msh-type-body-wt);
+  letter-spacing: -0.01em;
+  padding: 0.25rem 0 !important;
+  max-width: 72ch;
+}
+
+/* Desktop: ensure message body is at least as wide as the hover toolbar
+   5 emojis (~30px each) + divider + 3 actions (~28px each) + padding ≈ 250px */
+@media (hover: hover) and (pointer: fine) {
+  .message__body-content {
+    min-inline-size: 16rem;
+  }
+}
+
+/* Hover: subtle row highlight */
+.message:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+  border-radius: 0.25rem;
+}
+
+/* --- Own messages — left-aligned like everyone else, subtle accent bar --- */
+.message--me {
+  grid-auto-columns: 1.75rem 1fr min-content !important;
+  grid-template-areas:
+    "sep sep sep"
+    "avatar body body" !important;
+  border-left: 2px solid var(--msh-accent-brand);
+}
+
+.message--me :is(.message__body, .message__meta, .message__heading) {
+  justify-self: start !important;
+}
+
+.message--me :is(.message__meta, .message__heading) {
+  flex-direction: row !important;
+  justify-content: start !important;
+}
+
+.message--me .message__meta {
+  padding-inline: 0 calc(var(--btn-size) / 2) !important;
+}
+
+.message--me .message__avatar {
+  margin-inline: 0 !important;
+}
+
+.message--me .message__body {
+  flex-direction: row !important;
+  max-inline-size: calc(100% - var(--btn-size, 2rem)) !important;
+}
+
+.message--me .message__actions {
+  justify-content: start !important;
+}
+@media (hover: hover) and (pointer: fine) {
+  /* Own-message toolbar: same top-right positioning as other messages */
+  .message--me .message__actions {
+    inset-inline-start: auto !important;
+    inset-inline-end: 0.5rem !important;
+  }
+}
+@media (hover: none) and (pointer: coarse) and (min-width: 100ch) {
+  .message--me .message__actions {
+    inset-inline-start: calc(100% + var(--message-column-gap) / 2) !important;
+    inset-inline-end: auto !important;
+  }
+}
+
+.message--me .message__body-content {
+  color: var(--msh-text-primary, #16181D) !important;
+  background-color: rgba(227, 181, 5, 0.04) !important;
+  border-radius: 0.5rem;
+  padding: 0.35rem 0.5rem !important;
+}
+
+.message--me .message__body-content .trix-content {
+  color: var(--msh-text-primary, #16181D) !important;
+}
+
+.message--me .message__body-content a {
+  color: var(--color-link) !important;
+}
+
+/* --- Emoji messages — transparent, larger --- */
+.message--emoji:not(:has(.composer--edit)) .message__body-content {
+  background-color: transparent !important;
+}
+
+/* --- Mentioned messages — gold tint row highlight --- */
+.message--mentioned {
+  background-color: rgba(227, 181, 5, 0.08) !important;
+  border-left: 3px solid var(--msh-accent-brand);
+  border-radius: 0.25rem;
+}
+.message--mentioned .message__body-content {
+  --message-background: transparent !important;
+  background-color: transparent !important;
+  animation: wiggle 0.4s both;
+}
+
+/* --- Relax message body max-width for row layout, keep room for actions --- */
+.message__body {
+  max-inline-size: calc(100% - var(--btn-size, 2rem)) !important;
+  overflow: visible;
+}
+
+/* --- Day separator — quiet centered line --- */
+.message__day-separator {
+  margin-block: 1.5rem 0.75rem;
+}
+
+.message__day-separator time,
+.message__day-separator span {
+  font: var(--msh-type-tiny);
+  font-weight: var(--msh-type-tiny-wt);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--msh-text-tertiary, #6E7787);
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0 1.5ch;
+  white-space: nowrap;
+}
+
+.message__day-separator::before,
+.message__day-separator::after {
+  content: "" !important;
+  display: block !important;
+  flex: 1;
+  height: 1px;
+  background-color: var(--msh-border-subtle);
+}
+
+.message--first-of-day .message__day-separator {
+  display: flex !important;
+  align-items: center;
+  gap: 1ch;
+  visibility: visible;
+}
+
+/* --- Author name — bold, prominent --- */
+.message__author {
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: var(--msh-font-family);
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--msh-text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  .message__author {
+    font-weight: 600;
+  }
+}
+
+/* --- Hide timestamp on threaded (consecutive same-user) messages --- */
+.message--threaded .message__permalink {
+  display: none;
+}
+
+/* --- Permalink timestamps --- */
+.message__permalink {
+  font: var(--msh-type-timestamp);
+  font-weight: var(--msh-type-timestamp-wt);
+  letter-spacing: 0.01em;
+  color: var(--msh-text-tertiary);
+}
+
+/* --- Attachments --- */
+.message__attachment {
+  border-radius: 0.75rem;
+  border-color: var(--msh-border-subtle);
+}
+
+/* ============================================================================
+   COMPOSER — Floating Bento Input
+   ============================================================================ */
+
+.composer {
+  padding: 1rem calc(var(--inline-space) + 1vw);
+  border-block-start: 1px solid var(--msh-border-subtle);
+  background-color: var(--msh-bg-surface, white);
+}
+
+.composer__input {
+  --input-border-radius: 1rem;
+  border-radius: 1rem !important;
+  background-color: var(--msh-bg-surface-subtle) !important;
+  border: 1px solid var(--msh-border-subtle) !important;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.composer__input:focus-within {
+  border-color: var(--msh-accent-brand) !important;
+  box-shadow: 0 0 0 3px var(--msh-accent-brand-soft) !important;
+}
+
+/* Prevent double border: zero inner .input when inside composer */
+.composer__input .input {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Send button — dark with gold icon */
+.composer .btn--reversed {
+  --btn-background: var(--msh-bg-sidebar) !important;
+  --btn-color: var(--msh-accent-brand) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 2px 8px rgba(24, 24, 24, 0.15);
+  transition: background-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+.composer .btn--reversed:hover {
+  transform: scale(1.02);
+}
+
+.composer__file-thumbnail {
+  border-radius: 0.75rem;
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.btn {
+  border-radius: var(--btn-border-radius, 0.625rem);
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, box-shadow 180ms ease;
+  letter-spacing: -0.005em;
+}
+
+.btn--reversed {
+  --btn-background: var(--msh-accent-brand);
+  --btn-color: var(--msh-bg-sidebar);
+  --btn-border-color: transparent;
+  font-weight: 700;
+}
+.btn--reversed:where(:not(:active):hover) {
+  filter: brightness(0.94);
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn--reversed {
+    --btn-background: var(--msh-accent-brand);
+    --btn-color: var(--msh-bg-sidebar);
+  }
+  .btn--reversed img:not(.avatar) {
+    filter: invert(0%) !important;
+  }
+}
+
+.btn--pulsing {
+  animation: mosaic-pulse 2s infinite both;
+  outline: 0 solid var(--msh-accent-brand);
+}
+
+@keyframes mosaic-pulse {
+  0%, 100% { outline-width: 0; outline-offset: 0; }
+  50% { outline-width: 3px; outline-offset: 3px; }
+}
+
+/* Secondary/ghost buttons */
+.btn--plain {
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 15%, transparent);
+  border-radius: 9999px;
+  color: var(--color-primary);
+}
+
+/* --- Theme Toggle (hidden — follows system preference) --- */
+.theme-toggle {
+  display: none !important;
+}
+.theme-toggle {
+  align-items: center;
+  background-color: var(--color-surface-high);
+  border-radius: 9999px;
+  display: flex;
+  gap: 0.15rem;
+  margin-inline-start: auto;
+  padding: 0.15rem;
+  pointer-events: auto;
+}
+
+.sidebar__tools .theme-toggle {
+  background-color: rgba(0, 0, 0, 0.08);
+  margin-inline-start: 0;
+}
+
+.sidebar__tools .theme-toggle__btn {
+  color: rgba(0, 0, 0, 0.4);
+  padding: 0.3rem;
+}
+
+.sidebar__tools .theme-toggle__btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.sidebar__tools .theme-toggle__btn.theme-toggle--active {
+  background-color: rgba(0, 0, 0, 0.12);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+/* Dark mode overrides */
+html[data-theme="dark"] .sidebar__tools .theme-toggle {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="dark"] .sidebar__tools .theme-toggle__btn {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+html[data-theme="dark"] .sidebar__tools .theme-toggle__btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+html[data-theme="dark"] .sidebar__tools .theme-toggle__btn.theme-toggle--active {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle {
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle__btn {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle__btn:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.9);
+  }
+  html:not([data-theme="light"]) .sidebar__tools .theme-toggle__btn.theme-toggle--active {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.theme-toggle__btn {
+  align-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 9999px;
+  color: var(--color-text-variant);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.35rem;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.theme-toggle__btn:hover {
+  background-color: var(--color-surface-highest);
+  color: var(--color-text);
+}
+
+.theme-toggle__btn.theme-toggle--active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* ============================================================================
+   AVATARS
+   ============================================================================ */
+
+.avatar {
+  border: 1.5px solid var(--msh-border-subtle);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  border-radius: 0.75rem;
+}
+
+.avatar--icon {
+  border-color: var(--msh-border-avatar);
+}
+
+.message__avatar {
+  --avatar-size: 1.75rem !important;
+  box-shadow: 0 0 0 var(--hover-size) var(--msh-bg-app);
+}
+
+.message__avatar .avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.75rem;
+}
+
+/* Thread sidebar — slightly smaller avatars */
+.thread-sidebar .message__avatar {
+  --avatar-size: 1.5rem !important;
+}
+
+.thread-sidebar .message__avatar .avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.thread-sidebar .message {
+  grid-auto-columns: 1.5rem 1fr min-content !important;
+}
+
+/* Thread sidebar — parent message stands out */
+.thread-sidebar__parent {
+  background-color: var(--msh-bg-surface-subtle, rgba(0, 0, 0, 0.03)) !important;
+  border-block-end: 1px solid var(--msh-border-subtle) !important;
+  overflow-y: auto !important;
+  flex-shrink: 1 !important;
+  max-block-size: 40vh;
+}
+
+.thread-sidebar__parent .message__body-content {
+  font-size: 1rem !important;
+  line-height: 1.55;
+}
+
+.thread-sidebar__parent .message__author {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Thread sidebar — replies are visually quieter */
+.thread-sidebar__replies .message__body-content {
+  font-size: 0.9rem;
+}
+
+.thread-sidebar__replies .message__author {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ============================================================================
+   DIALOGS & MODALS
+   ============================================================================ */
+
+.dialog::backdrop {
+  background-image: linear-gradient(
+    135deg,
+    #E3B505,
+    oklch(72% 0.18 60),
+    oklch(58% 0.2 35),
+    oklch(52% 0.18 15)
+  );
+  opacity: 0.7;
+}
+
+.dialog {
+  border-radius: 1rem;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.04),
+    0 24px 48px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--msh-border-subtle);
+}
+
+/* ============================================================================
+   INPUTS & FORMS
+   ============================================================================ */
+
+.input {
+  border-radius: 0.625rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.input:focus,
+.input:focus-within {
+  border-color: var(--msh-accent-brand);
+  box-shadow: 0 0 0 3px var(--msh-accent-brand-soft);
+  outline: none;
+}
+
+input[type="checkbox"]:checked + .switch,
+.btn:has(input:checked) {
+  --btn-background: var(--msh-accent-brand);
+  --btn-color: var(--msh-bg-sidebar);
+}
+
+.searches__query {
+  --btn-border-radius: 0.625rem;
+  font-family: var(--msh-font-family);
+}
+
+/* ============================================================================
+   MISC COMPONENTS
+   ============================================================================ */
+
+.flash__inner {
+  border-radius: 0.625rem;
+  font-family: var(--msh-font-family);
+  font-weight: 600;
+}
+
+:where(button, input, textarea, summary, .input, .btn):where(:not(:active)):focus-visible {
+  outline-color: var(--msh-accent-brand);
+}
+
+:where(a:not([class]):not(:has(img))) {
+  transition: color 150ms ease, filter 150ms ease;
+}
+
+.panel {
+  border-radius: 0.75rem;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.03),
+    0 16px 32px rgba(0, 0, 0, 0.06);
+}
+
+code {
+  border-radius: 0.375rem;
+  font-size: 0.85em;
+  border-color: var(--msh-border-subtle);
+  background-color: var(--msh-bg-code);
+  color: var(--msh-text-primary);
+  font-weight: 700;
+  padding: 0.15em 0.4em;
+}
+
+pre {
+  border-radius: 0.5rem;
+  border: 1px solid var(--msh-border-subtle);
+  padding: 1em;
+}
+
+fieldset { border-color: var(--msh-border-subtle); }
+
+legend {
+  font-family: var(--msh-font-family);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.typing-indicator__author {
+  font-family: var(--msh-font-family);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.version-badge {
+  border-radius: 0.375rem;
+  font-family: var(--msh-font-family);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================================
+   INLINE MESSAGE ACTIONS — Compact horizontal toolbar on click
+   Restyles the three-dot dropdown from a vertical popover to a compact
+   horizontal toolbar when opened. The trigger button is repositioned to
+   the top-right of the message on hover.
+   ============================================================================ */
+
+/* --- Desktop: restyle opened menu as horizontal toolbar --- */
+@media (hover: hover) and (pointer: fine) {
+
+  /* Position the actions trigger at top-right of message on hover */
+  .message {
+    position: relative;
+  }
+
+  .message__actions {
+    position: absolute !important;
+    inset-block-start: -0.5rem;
+    inset-inline-start: 0;
+    inset-inline-end: 0.5rem;
+    z-index: 5;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+
+  .message__actions > * {
+    pointer-events: auto;
+  }
+
+  /* Restyle the trigger button as a small pill */
+  .message__options-btn {
+    border-radius: 0.5rem !important;
+    border: 1px solid var(--msh-border-subtle) !important;
+    background-color: var(--msh-bg-surface, #FFFFFF) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+    padding: 0.15rem 0.35rem !important;
+  }
+
+  /* When opened, restyle the menu as a horizontal toolbar */
+  .message:has([open]) .message__actions-menu {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 0;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    padding: 0.15rem !important;
+    border-radius: 0.5rem;
+    border: 1px solid var(--msh-border-subtle);
+    background-color: var(--msh-bg-surface, #FFFFFF);
+    box-shadow:
+      0 1px 4px rgba(0, 0, 0, 0.06),
+      0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Remove the dropdown arrow pseudo-elements */
+  .message__actions-menu::before,
+  .message__actions-menu::after {
+    display: none !important;
+  }
+
+  /* Quick-boost emojis: single horizontal row, show first 5 */
+  .message:has([open]) .message__actions-menu .quick-boosts {
+    display: flex !important;
+    grid-template-columns: none;
+    gap: 0;
+    flex-wrap: nowrap;
+  }
+
+  /* Emoji buttons in the toolbar */
+  .message__actions-menu .quick-boosts .btn.message__action-btn {
+    padding: 0.2rem 0.3rem !important;
+    min-width: auto;
+    flex-basis: auto !important;
+  }
+
+  /* Show only first 5 emoji reactions in toolbar, hide the rest */
+  .message__actions-menu .quick-boosts form:nth-child(n+6) {
+    display: none !important;
+  }
+
+  .message__actions-menu .quick-boosts .boost-character {
+    font-size: 1rem;
+  }
+
+  /* Hide the standalone "add boost" button in the toolbar */
+  .message__actions-menu .message__boost-btn {
+    display: none !important;
+  }
+
+  /* Action buttons row: reply, copy link, edit — horizontal */
+  .message:has([open]) .message__actions-menu .message__actions-grid {
+    display: flex !important;
+    flex-wrap: nowrap;
+    border-top: none !important;
+    border-left: 1px solid var(--msh-border-subtle);
+    margin-block-start: 0 !important;
+    padding-block-start: 0 !important;
+    margin-inline-start: 0.15rem;
+    padding-inline-start: 0.15rem;
+    gap: 0;
+  }
+
+  .message__actions-menu .message__actions-grid .btn.message__action-btn {
+    padding: 0.25rem 0.35rem !important;
+    flex-basis: auto !important;
+    width: auto !important;
+  }
+
+  .message__actions-menu .message__actions-grid .btn.message__action-btn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Subtle hover background on individual toolbar buttons */
+  .message__actions-menu .btn.message__action-btn:hover {
+    background-color: var(--msh-bg-surface-subtle) !important;
+    border-radius: 0.375rem;
+  }
+}
+
+/* --- Mobile: styled dropdown — must escape overflow clipping --- */
+@media (hover: none) and (pointer: coarse) {
+  .message:has([open]) {
+    z-index: 10;
+  }
+
+  .message__actions-menu {
+    z-index: 20;
+    border-radius: 0.75rem;
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06),
+      0 12px 24px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--msh-border-subtle);
+  }
+}
+
+/* --- Dark mode adjustments --- */
+@media (hover: hover) and (pointer: fine) and (prefers-color-scheme: dark) {
+  .message__options-btn {
+    background-color: var(--msh-bg-surface-raised, #2A2A2A) !important;
+    border-color: var(--msh-border-strong, #404040) !important;
+  }
+
+  .message:has([open]) .message__actions-menu {
+    background-color: var(--msh-bg-surface-raised, #2A2A2A) !important;
+    border-color: var(--msh-border-strong, #404040);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.boost-item { border-radius: 0.5rem; }
+
+/* --- Reply badge — themed metadata --- */
+.reply-badge {
+  font-family: var(--msh-font-family);
+  font: var(--msh-type-meta);
+  font-weight: 600;
+  color: var(--msh-accent-brand-hover) !important;
+  text-decoration: none;
+  padding: 0.25rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.reply-badge::before {
+  content: "\1F4AC";
+  font-size: 0.75rem;
+}
+
+.reply-badge:hover {
+  color: var(--msh-accent-brand) !important;
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .reply-badge {
+    color: var(--msh-accent-brand) !important;
+  }
+}
+
+.autocomplete {
+  border-radius: 0.625rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--msh-border-subtle);
+}
+
+.embed {
+  border-radius: 0.625rem;
+  border-color: var(--msh-border-subtle);
+}
+
+.lightbox {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.message-area:not(:has(.message)) {
+  opacity: 0.15;
+}
+
+.notifications-help {
+  border-radius: 0.625rem;
+  border-color: var(--msh-border-subtle);
+  background-color: var(--msh-bg-app);
+}
+
+.signup { font-family: var(--msh-font-family); }
+
+/* ============================================================================
+   LAYOUT OVERRIDES
+   ============================================================================ */
+
+/* Fixed sidebar width instead of viewport-relative */
+@media (min-width: 100ch) {
+  :root {
+    --sidebar-width: 280px;
+  }
+}
+
+/* Show recent searches on desktop (upstream hides them) */
+.searches__recents {
+  display: flex;
+}
+
+/* ============================================================================
+   SEARCH RESULTS — Compact Result Rows
+   ============================================================================ */
+
+/* Tighter spacing between search results */
+.searches__results.messages {
+  --message-space: 0 !important;
+  row-gap: 0 !important;
+}
+
+/* Each result gets a subtle bottom border */
+.searches__results .message {
+  border-bottom: 1px solid var(--msh-border-subtle);
+  padding-block: 0.75rem;
+  border-radius: 0 !important;
+}
+
+.searches__results .message:hover {
+  background-color: var(--msh-bg-surface-subtle);
+}
+
+/* Smaller avatars in search results */
+.searches__results .message__avatar {
+  --avatar-size: 1.25rem !important;
+  margin-top: 0.1rem;
+}
+
+.searches__results .message__avatar .avatar {
+  border-radius: 0.375rem;
+  border-width: 1px;
+}
+
+/* Show room name inline in search results */
+.searches__results .message__room {
+  display: inline !important;
+  visibility: visible !important;
+  font: var(--msh-type-meta);
+  font-weight: var(--msh-type-meta-wt);
+  color: var(--msh-text-tertiary);
+}
+
+.searches__results .message__room::before {
+  content: "·";
+  margin-inline: 0.5ch;
+  color: var(--msh-text-tertiary);
+}
+
+/* Match grid column to smaller avatar */
+.searches__results .message {
+  grid-auto-columns: 1.25rem 1fr min-content !important;
+}
+
+/* No own-message accent bar in search results */
+.searches__results .message--me {
+  border-left: none;
+}
+
+/* ============================================================================
+   SEARCH CHIPS — Recent Searches
+   ============================================================================ */
+
+.searches__recents .room.btn {
+  font: var(--msh-type-meta);
+  font-weight: 500;
+  color: var(--msh-text-secondary);
+  background-color: transparent;
+  border: 1px solid var(--msh-border-subtle);
+  border-radius: 0.75rem;
+  padding: 0.35rem 1rem;
+  max-height: 2.25rem;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.searches__recents .room.btn:hover {
+  background-color: var(--msh-bg-surface-subtle);
+  border-color: var(--msh-border-strong);
+}
+
+/* Active query chip */
+.searches__query .btn--reversed {
+  font: var(--msh-type-meta);
+  font-weight: 600;
+  background-color: var(--msh-accent-brand-tint) !important;
+  color: var(--msh-text-primary) !important;
+  border: 1px solid var(--msh-accent-brand) !important;
+  border-radius: 0.75rem;
+  padding: 0.35rem 1rem;
+  max-height: 2.25rem;
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================================
+   PWA
+   ============================================================================ */
+
+@media (display-mode: standalone) {
+  body { padding-top: env(safe-area-inset-top); }
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes mosaic-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message--formatted {
+  animation: mosaic-fade-up 250ms ease-out both;
+}
+
+.message--formatted:nth-last-child(1) { animation-delay: 0ms; }
+.message--formatted:nth-last-child(2) { animation-delay: 30ms; }
+.message--formatted:nth-last-child(3) { animation-delay: 60ms; }
+.message--formatted:nth-last-child(4) { animation-delay: 90ms; }
+.message--formatted:nth-last-child(5) { animation-delay: 120ms; }
+
+/* ============================================================================
+   Documents Panel — Dropdown + Preview Sidebar
+   ============================================================================ */
+
+/* --- Wrapper --- */
+.documents-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* --- Toolbar Icon Button --- */
+.documents-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.375rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  transition: background-color 150ms ease, color 150ms ease;
+  position: relative;
+}
+
+.documents-icon-btn:hover {
+  background-color: oklch(var(--lch-gray));
+}
+
+.documents-icon-btn::after {
+  content: "Documents";
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--msh-font-family);
+  font-size: 0.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  background-color: oklch(var(--lch-black));
+  color: oklch(var(--lch-white));
+  padding: 0.25em 0.6em;
+  border-radius: 0.375rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.documents-icon-btn:hover::after {
+  opacity: 1;
+}
+
+.documents-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+/* --- Active icon state (room has docs) --- */
+.documents-icon--active .documents-icon {
+  stroke: var(--msh-accent-brand);
+}
+
+/* --- Dropdown Panel --- */
+.documents-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 200;
+  width: 280px;
+  background-color: oklch(var(--lch-white));
+  border: 1px solid oklch(var(--lch-gray-dark));
+  border-radius: 0.75rem;
+  box-shadow:
+    0 4px 6px oklch(var(--lch-black) / 0.04),
+    0 16px 32px oklch(var(--lch-black) / 0.1);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: var(--msh-font-family);
+}
+
+.documents-dropdown--open {
+  display: flex;
+}
+
+/* --- Dropdown Header --- */
+.documents-dropdown__header {
+  padding: 0.75rem 1rem 0.5rem;
+  border-bottom: 1px solid oklch(var(--lch-gray-dark));
+}
+
+.documents-dropdown__title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: oklch(var(--lch-gray-darker));
+}
+
+/* --- Dropdown List --- */
+.documents-dropdown__list {
+  flex: 1;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 0.375rem;
+}
+
+/* --- Document List Items --- */
+.documents-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.5rem 0.625rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 150ms ease;
+  gap: 0.125rem;
+  font-family: var(--msh-font-family);
+}
+
+.documents-item:hover {
+  background-color: oklch(var(--lch-gray));
+}
+
+.documents-item__title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: oklch(var(--lch-black));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.documents-item__meta {
+  font-size: 0.6875rem;
+  color: oklch(var(--lch-gray-darker));
+}
+
+/* --- Dropdown Footer (Create Form) --- */
+.documents-dropdown__footer {
+  padding: 0.5rem;
+  border-top: 1px solid oklch(var(--lch-gray-dark));
+}
+
+.documents-create-btn {
+  width: 100%;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  border: 1px dashed oklch(var(--lch-gray-dark));
+  cursor: pointer;
+  font-family: var(--msh-font-family);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: oklch(var(--lch-gray-darker));
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  text-align: left;
+}
+
+.documents-create-btn:hover {
+  background-color: var(--msh-accent-brand-soft);
+  border-color: var(--msh-accent-brand);
+  color: oklch(var(--lch-black));
+}
+
+/* Create form — hidden by default, shown when parent has --open */
+.documents-create-form {
+  display: none;
+  gap: 0.375rem;
+  margin-top: 0.375rem;
+  flex-direction: column;
+}
+
+.documents-create--open .documents-create-form {
+  display: flex;
+}
+
+.documents-create-input {
+  width: 100%;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 0.5rem;
+  border: 1px solid oklch(var(--lch-gray-dark));
+  background-color: oklch(var(--lch-gray));
+  font-family: var(--msh-font-family);
+  font-size: 0.8125rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+  box-sizing: border-box;
+}
+
+.documents-create-input:focus {
+  border-color: var(--msh-accent-brand);
+  box-shadow: 0 0 0 3px var(--msh-accent-brand-soft);
+  outline: none;
+}
+
+.documents-create-submit {
+  align-self: flex-end;
+  font-size: 0.8125rem;
+  padding: 0.375rem 0.875rem;
+}
+
+/* --- State Messages --- */
+.documents-loading,
+.documents-empty,
+.documents-error {
+  padding: 0.75rem 0.625rem;
+  font-family: var(--msh-font-family);
+  font-size: 0.8125rem;
+  color: oklch(var(--lch-gray-darker));
+  text-align: center;
+}
+
+.documents-error {
+  color: oklch(var(--lch-red, 55% 0.2 25));
+}
+
+/* --- Document Preview Sidebar --- */
+.doc-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 300;
+  width: min(420px, 100vw);
+  background-color: oklch(var(--lch-white));
+  border-left: 1px solid oklch(var(--lch-gray-dark));
+  box-shadow: -8px 0 32px oklch(var(--lch-black) / 0.08);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  font-family: var(--msh-font-family);
+}
+
+.doc-sidebar--open {
+  transform: translateX(0);
+}
+
+/* --- Sidebar Header --- */
+.doc-sidebar__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid oklch(var(--lch-gray-dark));
+  flex-shrink: 0;
+}
+
+.doc-sidebar__title {
+  font-family: var(--msh-font-family);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+  color: oklch(var(--lch-black));
+}
+
+.doc-sidebar__close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: oklch(var(--lch-gray-darker));
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.doc-sidebar__close:hover {
+  background-color: oklch(var(--lch-gray));
+  color: oklch(var(--lch-black));
+}
+
+/* --- Sidebar Meta --- */
+.doc-sidebar__meta {
+  margin: 0;
+  padding: 0.5rem 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: oklch(var(--lch-gray-darker));
+  border-bottom: 1px solid oklch(var(--lch-gray));
+  flex-shrink: 0;
+}
+
+/* --- Sidebar Content (Markdown) --- */
+.doc-sidebar__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem;
+  font-family: var(--msh-font-family);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: oklch(var(--lch-black));
+}
+
+/* Headings */
+.doc-sidebar__content h1,
+.doc-sidebar__content h2,
+.doc-sidebar__content h3,
+.doc-sidebar__content h4,
+.doc-sidebar__content h5,
+.doc-sidebar__content h6 {
+  font-family: var(--msh-font-family);
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em;
+  color: oklch(var(--lch-black));
+}
+
+.doc-sidebar__content h1 { font-size: 1.25rem; }
+.doc-sidebar__content h2 { font-size: 1.1rem; }
+.doc-sidebar__content h3 { font-size: 0.975rem; }
+.doc-sidebar__content h4,
+.doc-sidebar__content h5,
+.doc-sidebar__content h6 { font-size: 0.875rem; }
+
+/* Paragraphs */
+.doc-sidebar__content p {
+  margin-bottom: 0.875em;
+}
+
+/* Links */
+.doc-sidebar__content a {
+  color: oklch(var(--lch-blue-dark, 65% 0.15 250));
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.doc-sidebar__content a:hover {
+  color: var(--msh-accent-brand-hover);
+}
+
+/* Lists */
+.doc-sidebar__content ul,
+.doc-sidebar__content ol {
+  padding-left: 1.5em;
+  margin-bottom: 0.875em;
+}
+
+.doc-sidebar__content li {
+  margin-bottom: 0.25em;
+}
+
+/* Code */
+.doc-sidebar__content code {
+  font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+  font-size: 0.82em;
+  background-color: oklch(var(--lch-gray));
+  border: 1px solid oklch(var(--lch-gray-dark));
+  border-radius: 0.25rem;
+  padding: 0.1em 0.35em;
+}
+
+.doc-sidebar__content pre {
+  background-color: oklch(var(--lch-gray));
+  border: 1px solid oklch(var(--lch-gray-dark));
+  border-radius: 0.5rem;
+  padding: 0.875em 1em;
+  overflow-x: auto;
+  margin-bottom: 0.875em;
+}
+
+.doc-sidebar__content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.82em;
+}
+
+/* Blockquote */
+.doc-sidebar__content blockquote {
+  border-left: 3px solid var(--msh-accent-brand);
+  margin-left: 0;
+  padding-left: 1em;
+  color: oklch(var(--lch-gray-darker));
+  font-style: italic;
+  margin-bottom: 0.875em;
+}
+
+/* Tables */
+.doc-sidebar__content table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85em;
+  margin-bottom: 0.875em;
+}
+
+.doc-sidebar__content th,
+.doc-sidebar__content td {
+  border: 1px solid oklch(var(--lch-gray-dark));
+  padding: 0.4em 0.65em;
+  text-align: left;
+}
+
+.doc-sidebar__content th {
+  background-color: oklch(var(--lch-gray));
+  font-family: var(--msh-font-family);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* HR */
+.doc-sidebar__content hr {
+  border: none;
+  border-top: 1px solid oklch(var(--lch-gray-dark));
+  margin: 1.25em 0;
+}
+
+/* --- Sidebar Actions --- */
+.doc-sidebar__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid oklch(var(--lch-gray-dark));
+  flex-shrink: 0;
+}
+
+/* --- Document Button Variant --- */
+.documents-btn {
+  font-size: 0.8125rem;
+  padding: 0.4375rem 0.875rem;
+  border-radius: 0.5rem;
+}
+
+/* --- Truncated Notice --- */
+.documents-truncated {
+  margin-top: 1.25em;
+  font-family: var(--msh-font-family);
+  font-size: 0.8rem;
+  color: oklch(var(--lch-gray-darker));
+}
+
+.documents-truncated a {
+  color: var(--msh-accent-brand-hover);
+  font-weight: 600;
+}
+
+/* --- Message Highlight (scroll-to-message) --- */
+@keyframes mosaic-gold-glow {
+  0% {
+    box-shadow: 0 0 0 0 var(--msh-accent-brand-soft);
+    background-color: transparent;
+  }
+  25% {
+    box-shadow: 0 0 0 4px var(--msh-accent-brand-soft);
+    background-color: var(--msh-accent-brand-soft);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+    background-color: transparent;
+  }
+}
+
+.message--highlighted {
+  border-radius: 0.625rem;
+  animation: mosaic-gold-glow 2s ease-out forwards;
+}
+
+/* --- Dark Mode Adjustments --- */
+@media (prefers-color-scheme: dark) {
+  .documents-dropdown {
+    background-color: oklch(var(--lch-black));
+    border-color: oklch(var(--lch-gray-dark));
+  }
+
+  .documents-item__title {
+    color: oklch(var(--lch-white));
+  }
+
+  .documents-create-input {
+    background-color: oklch(var(--lch-gray));
+    color: oklch(var(--lch-white));
+  }
+
+  .doc-sidebar {
+    background-color: oklch(var(--lch-black));
+    border-left-color: oklch(var(--lch-gray-dark));
+  }
+
+  .doc-sidebar__title,
+  .doc-sidebar__content {
+    color: oklch(var(--lch-white));
+  }
+
+  .doc-sidebar__content h1,
+  .doc-sidebar__content h2,
+  .doc-sidebar__content h3,
+  .doc-sidebar__content h4,
+  .doc-sidebar__content h5,
+  .doc-sidebar__content h6 {
+    color: oklch(var(--lch-white));
+  }
+
+  .doc-sidebar__content code,
+  .doc-sidebar__content pre {
+    background-color: oklch(var(--lch-gray));
+  }
+
+  .doc-sidebar__content th {
+    background-color: oklch(var(--lch-gray));
+  }
+}

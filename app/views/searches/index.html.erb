@@ -54,7 +54,18 @@
   </div>
 
   <%= search_results_tag do %>
-    <%= render @messages %>
+    <% @messages.each do |message| %>
+      <%= render partial: "messages/message", locals: { message: message } %>
+      <% if message.thread? %>
+        <div class="search-result__thread-context">
+          <span class="search-result__thread-label">In thread:</span>
+          <a href="<%= room_path(message.room, thread: message.parent_message_id, highlight: message.id) %>"
+             class="search-result__thread-link">
+            <%= truncate(message.parent_message.plain_text_body, length: 60) %>
+          </a>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
 </div>
 

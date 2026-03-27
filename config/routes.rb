@@ -9,6 +9,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # OmniAuth OIDC callback (Entra ID SSO)
+  match "/auth/oidc/callback", to: "sessions/omniauth#create", via: %i[get post], as: :oidc_callback
+  get "/auth/failure", to: "sessions/omniauth#failure", as: :oidc_failure
+
   resource :account do
     scope module: "accounts" do
       resources :users
@@ -60,7 +64,9 @@ Rails.application.routes.draw do
   end
 
   resources :rooms do
-    resources :messages
+    resources :messages do
+      resource :thread, only: [:show], controller: "messages/threads"
+    end
 
     post ":bot_key/messages", to: "messages/by_bots#create", as: :bot_messages
 
@@ -77,6 +83,10 @@ Rails.application.routes.draw do
     resources :opens
     resources :closeds
     resources :directs
+  end
+
+  resources :memberships, only: [] do
+    resource :favorite, only: :update, module: :memberships
   end
 
   resources :messages do

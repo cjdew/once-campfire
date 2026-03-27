@@ -22,6 +22,12 @@ export default class extends Controller {
 
   sort() {
     const sortedItemTargets = this.itemTargets.sort((a, b) => {
+      const aFav = a.dataset.sortedListFavorited === "true"
+      const bFav = b.dataset.sortedListFavorited === "true"
+
+      // Favorited items always sort first
+      if (aFav !== bFav) return aFav ? -1 : 1
+
       if (a.dataset.sortedListNumber) {
         return b.dataset.sortedListNumber - a.dataset.sortedListNumber
       } else {

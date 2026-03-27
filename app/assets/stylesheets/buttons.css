@@ -35,7 +35,9 @@
       filter: invert(0);
 
       @media (prefers-color-scheme: dark) {
-        filter: invert(100%);
+        html:not([data-theme="light"]):not([data-theme="dark"]) & {
+          filter: invert(100%);
+        }
       }
     }
   }
@@ -121,7 +123,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
-      img {
+      html:not([data-theme="light"]):not([data-theme="dark"]) & img {
         filter: invert(0);
       }
     }
@@ -164,9 +166,15 @@
     filter: invert(100%);
 
     @media (prefers-color-scheme: dark) {
-      filter: invert(0%);
+      html:not([data-theme="light"]):not([data-theme="dark"]) & {
+        filter: invert(0%);
+      }
     }
   }
+}
+
+html[data-theme="dark"] :is(.btn--reversed, .btn--negative) img:not(.avatar) {
+  filter: invert(0%);
 }
 
 .btn--success {
@@ -183,6 +191,14 @@
   box-shadow: none;
   cursor: initial;
   outline: 0;
+}
+
+html[data-theme="dark"] .btn:where(:has(img):not(.avatar)) img:not([class]) {
+  filter: invert(100%);
+}
+
+html[data-theme="dark"] .btn:has(input:checked) img {
+  filter: invert(0);
 }
 
 .btn--borderless {

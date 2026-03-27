@@ -6,6 +6,9 @@
 
     <div class="min-width">
       <div class="overflow-ellipsis txt-large"><strong><%= bot.name %></strong></div>
+      <% if bot.bio.present? %>
+        <div class="overflow-ellipsis txt-small" style="opacity: 0.7;"><%= bot.bio %></div>
+      <% end %>
     </div>
 
     <%= link_to edit_account_bot_path(bot), class: "btn flex-item-justify-end", style: "view-transition-name: chat-bot-#{ bot.id }" do %>

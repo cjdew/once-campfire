@@ -11,8 +11,9 @@ class Membership < ApplicationRecord
   scope :with_ordered_room, -> { includes(:room).joins(:room).order("LOWER(rooms.name)") }
   scope :without_direct_rooms, -> { joins(:room).where.not(room: { type: "Rooms::Direct" }) }
 
-  scope :visible, -> { where.not(involvement: :invisible) }
-  scope :unread,  -> { where.not(unread_at: nil) }
+  scope :visible,    -> { where.not(involvement: :invisible) }
+  scope :unread,     -> { where.not(unread_at: nil) }
+  scope :favorited,  -> { where(favorited: true) }
 
   def read
     update!(unread_at: nil)

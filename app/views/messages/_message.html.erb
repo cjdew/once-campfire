@@ -4,7 +4,7 @@
   <%= message_tag message do %>
     <h2 class="message__day-separator"><%= local_datetime_tag message.created_at, style: :date %></h2>
 
-    <figure class="avatar message__avatar">
+    <figure class="avatar message__avatar" <%= tag.attributes(title: message.creator.bio) if message.creator.bot? && message.creator.bio.present? %>>
       <%= avatar_tag message.creator %>
     </figure>
 
@@ -25,6 +25,7 @@
             <%= render "messages/actions", message: message, url: room_at_message_url(message.room, message) %>
           </div>
           <%= render "messages/presentation", message: message %>
+          <%= render "messages/reply_badge", message: message unless message.thread? %>
           <%= render "messages/boosts/boosts", message: message %>
         </div>
       </div>

@@ -67,9 +67,9 @@
 }
 
 .messages {
-  --message-column-gap: 0.66ch;
+  --message-column-gap: 1.25rem;
   --message-row-gap: 0.1em;
-  --message-space: 1.33em;
+  --message-space: 2rem;
 
   display: grid;
   flex: 1;
@@ -85,8 +85,8 @@
 }
 
 .message {
-  --content-padding-block: 0.66rem;
-  --content-padding-inline: calc(var(--inline-space) * 1.5);
+  --content-padding-block: 1.4rem;
+  --content-padding-inline: 1.4rem;
 
   column-gap: var(--message-column-gap);
   display: grid;
@@ -158,38 +158,37 @@
 .message__day-separator {
   align-items: center;
   display: none;
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-family: var(--font-system, 'Inter', sans-serif);
+  font-size: 0.7rem;
+  font-weight: 500;
   grid-area: sep;
-  grid-template-columns: 1fr auto 1fr;
   inline-size: 100%;
+  justify-content: center;
+  letter-spacing: 0.1em;
   margin-block: var(--message-space);
   text-align: center;
   text-transform: uppercase;
-  visibility: hidden;
+  color: var(--color-text-variant);
 
-  time,
-  span {
-    padding: 0.66em 2.33ch;
-    background-color: var(--color-message-bg);
-    border-radius: 3em;
+  time, span {
+    background-color: var(--color-surface-high);
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
   }
 
-  &::after,
-  &::before {
-    border-top: 2px solid var(--color-message-bg);
-    content: "";
+  &::after, &::before {
+    display: none;
   }
+}
 
-  .message--first-of-day & {
-    display: grid;
-    visibility: visible;
-  }
+.message--first-of-day .message__day-separator {
+  display: grid;
+  visibility: visible;
 }
 
 .message__avatar {
   --avatar-border-size: 1px;
-  --avatar-size: 3.5ch;
+  --avatar-size: 3.5rem;
 
   grid-area: avatar;
   z-index: 2;
@@ -265,7 +264,7 @@
   position: relative;
 
   .message--me & {
-    flex-direction: row-reverse;
+    flex-direction: row;
   }
 
   @media (max-width: 100ch) {
@@ -275,7 +274,7 @@
 
 .message__body-content {
   background-color: var(--message-background, var(--color-message-bg));
-  border-radius: 0.66em;
+  border-radius: 1.5rem;
   color: var(--message-color, var(--color-text));
   font-weight: 400;
   inline-size: fit-content;
@@ -313,8 +312,8 @@
 
 .message__attachment {
   block-size: auto;
-  border: 1px solid var(--color-border);
-  border-radius: 0.66em;
+  border: none;
+  border-radius: 1.25rem;
 
   .message__body-content:has(.boost) & {
     border-end-start-radius: 0;
@@ -377,7 +376,6 @@ img.message__attachment {
 .message__edit-btn {
   display: none;
 
-  .admin &,
   .message--me & {
     display: inline-flex;
   }
@@ -471,38 +469,12 @@ img.message__attachment {
   }
 }
 
-/* Me */
+/* Me — left-aligned like received messages */
 .message--me {
-  grid-auto-columns: min-content 1fr var(--inline-space-double);
+  grid-auto-columns: var(--inline-space-double) 1fr min-content;
   grid-template-areas:
     "sep sep sep"
-    "body body avatar";
-
-  :is(.message__body, .message__meta, .message__heading) {
-    justify-self: end;
-  }
-
-  :is(.message__meta, .message__heading) {
-    flex-direction: row-reverse;
-    justify-content: end;
-  }
-
-  .message__meta {
-    padding-inline: calc(var(--btn-size) / 2) 0;
-  }
-
-  .message__avatar {
-    margin-inline: calc(var(--content-padding-inline) * -1) 0;
-  }
-
-  .message__actions {
-    justify-content: end;
-
-    @media (min-width: 100ch) {
-      inset-inline-end: calc(100% + var(--message-column-gap) / 2);
-      inset-inline-start: auto;
-    }
-  }
+    "avatar body body";
 }
 
 .message--mentioned {
@@ -512,9 +484,15 @@ img.message__attachment {
     animation: wiggle 0.4s both;
 
     @media (prefers-color-scheme: dark) {
-      --message-background: oklch(var(--lch-red) / 0.2);
+      html:not([data-theme="light"]):not([data-theme="dark"]) & {
+        --message-background: oklch(var(--lch-red) / 0.2);
+      }
     }
   }
+}
+
+html[data-theme="dark"] .message--mentioned .message__body-content {
+  --message-background: oklch(var(--lch-red) / 0.2);
 }
 
 .message--threaded {
@@ -543,8 +521,8 @@ img.message__attachment {
     }
 
     .message--me & {
-      padding: var(--content-padding-block) var(--content-padding-inline) var(--content-padding-block) 0;
-      text-align: right;
+      padding: var(--content-padding-block) 0 var(--content-padding-block) var(--content-padding-inline);
+      text-align: left;
     }
 
     :is(.message--threaded) & {

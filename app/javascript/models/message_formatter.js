@@ -53,6 +53,30 @@ export default class MessageFormatter {
     }
 
     message.classList.toggle(this.#classes.firstOfDay, showSeparator)
+    this.#setFriendlyDateLabel(message)
+  }
+
+  #setFriendlyDateLabel(message) {
+    const separator = message.querySelector(".message__day-separator time, .message__day-separator span")
+    if (!separator || !message.dataset.messageTimestamp) return
+
+    const date = new Date(Number(message.dataset.messageTimestamp))
+    const today = new Date()
+    const yesterday = new Date(today)
+    yesterday.setDate(yesterday.getDate() - 1)
+
+    const dateOnly = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
+    let label
+    if (dateOnly(date).getTime() === dateOnly(today).getTime()) {
+      label = "Today"
+    } else if (dateOnly(date).getTime() === dateOnly(yesterday).getTime()) {
+      label = "Yesterday"
+    } else {
+      label = date.toLocaleDateString(undefined, { weekday: "long", month: "long", day: "numeric" })
+    }
+
+    separator.textContent = label
   }
 
   #threadMessage(message) {

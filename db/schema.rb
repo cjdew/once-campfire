@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2025_12_12_154340) do
+ActiveRecord::Schema[8.2].define(version: 2026_03_23_213558) do
   create_table "accounts", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "custom_styles"
@@ -83,6 +83,7 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_12_154340) do
     t.datetime "connected_at"
     t.integer "connections", default: 0, null: false
     t.datetime "created_at", null: false
+    t.boolean "favorited", default: false, null: false
     t.string "involvement", default: "mentions"
     t.integer "room_id", null: false
     t.datetime "unread_at"
@@ -91,6 +92,7 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_12_154340) do
     t.index ["room_id", "created_at"], name: "index_memberships_on_room_id_and_created_at"
     t.index ["room_id", "user_id"], name: "index_memberships_on_room_id_and_user_id", unique: true
     t.index ["room_id"], name: "index_memberships_on_room_id"
+    t.index ["user_id", "favorited"], name: "index_memberships_on_user_id_and_favorited"
     t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
@@ -98,9 +100,12 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_12_154340) do
     t.string "client_message_id", null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
+    t.integer "parent_message_id"
+    t.integer "replies_count", default: 0, null: false
     t.integer "room_id", null: false
     t.datetime "updated_at", null: false
     t.index ["creator_id"], name: "index_messages_on_creator_id"
+    t.index ["parent_message_id"], name: "index_messages_on_parent_message_id"
     t.index ["room_id"], name: "index_messages_on_room_id"
   end
 

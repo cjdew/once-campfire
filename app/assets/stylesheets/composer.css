@@ -70,10 +70,14 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    &::after {
+    html:not([data-theme="light"]):not([data-theme="dark"]) &::after {
       filter: invert(100%);
     }
   }
+}
+
+html[data-theme="dark"] .composer__file-caption::after {
+  filter: invert(100%);
 }
 
 /* Rich text */

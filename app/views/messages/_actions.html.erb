@@ -1,8 +1,8 @@
 <%# Be sure to check/update messages/_template.html.erb when changing this file %>
 
-<div class="message__actions" data-controller="soft-keyboard">
+<div class="message__actions" data-controller="soft-keyboard hover-actions">
   <%= tag.details class: "position-relative",
-      data: { controller: "popup", action: "keydown.esc->popup#close toggle->popup#toggle click@document->popup#closeOnClickOutside", popup_orientation_top_class: "popup-orientation-top" } do %>
+      data: { controller: "popup", hover_actions_target: "details", action: "keydown.esc->popup#close toggle->popup#toggle click@document->popup#closeOnClickOutside", popup_orientation_top_class: "popup-orientation-top" } do %>
     <summary class="btn message__action-btn message__options-btn">
       <%= image_tag "menu-dots-horizontal.svg", size: 20, class: "colorize--black", aria: { hidden: "true" } %>
       <span class="for-screen-reader">Message options</span>
@@ -39,9 +39,12 @@
             <%= image_tag "share.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
           <% end %>
         <% else %>
-          <%= tag.button class: "btn message__action-btn center full-width", data: { action: "reply#reply" }, title: "Reply", aria: { label: "Reply" } do %>
+          <button type="button" class="btn message__action-btn center full-width"
+                  data-action="thread-sidebar#open"
+                  data-thread-sidebar-message-id-param="<%= message.thread? ? message.parent_message_id : message.id %>"
+                  title="Reply in thread" aria-label="Reply in thread">
             <%= image_tag "reply.svg", class: "colorize--black", size: 20, aria: { hidden: "true" } %>
-          <% end %>
+          </button>
         <% end %>
 
         <%= tag.button class: "btn message__action-btn center full-width", title: "Copy link", aria: { label: "Copy link" }, data: { controller: "copy-to-clipboard", action: "copy-to-clipboard#copy", copy_to_clipboard_success_class: "btn--success", copy_to_clipboard_content_value: url } do %>

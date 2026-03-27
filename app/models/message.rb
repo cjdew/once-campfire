@@ -3,7 +3,9 @@ class Message < ApplicationRecord
 
   belongs_to :room, touch: true
   belongs_to :creator, class_name: "User", default: -> { Current.user }
+  belongs_to :parent_message, class_name: "Message", optional: true, counter_cache: :replies_count, touch: true
 
+  has_many :replies, class_name: "Message", foreign_key: :parent_message_id, dependent: :destroy
   has_many :boosts, dependent: :destroy
 
   has_rich_text :body
@@ -12,6 +14,7 @@ class Message < ApplicationRecord
   after_create_commit -> { room.receive(self) }
 
   scope :ordered, -> { order(:created_at) }
+  scope :root_messages, -> { where(parent_message_id: nil) }
   scope :with_creator, -> { preload(creator: :avatar_attachment) }
   scope :with_attachment_details, -> {
     with_rich_text_body_and_embeds
@@ -19,6 +22,14 @@ class Message < ApplicationRecord
       .includes(attachment_blob: :variant_records)
   }
   scope :with_boosts, -> { includes(boosts: :booster) }
+
+  def thread?
+    parent_message_id.present?
+  end
+
+  def thread_participants
+    User.where(id: replies.select(:creator_id))
+  end
 
   def plain_text_body
     body.to_plain_text.presence || attachment&.filename&.to_s || ""
