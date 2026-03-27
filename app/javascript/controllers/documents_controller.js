@@ -10,14 +10,19 @@ export default class extends Controller {
     this.token = document.querySelector('meta[name="entra-token"]')?.content || ""
     this.userName = document.querySelector('meta[name="current-user-name"]')?.content || ""
     this.open = false
-    // Preview sidebar lives outside the controller scope (in <body>)
-    this.sidebar = document.getElementById("doc-sidebar")
     this.handleKeydown = (e) => { if (e.key === "Escape") { this.closePreview(); this.close() } }
     this.handleClickOutside = (e) => {
-      if (this.open && !this.element.contains(e.target) && !this.sidebar?.contains(e.target)) this.close()
+      const sidebar = this.getSidebar()
+      if (this.open && !this.element.contains(e.target) && !sidebar?.contains(e.target)) this.close()
     }
     document.addEventListener("keydown", this.handleKeydown)
     document.addEventListener("click", this.handleClickOutside)
+  }
+
+  // Lazy lookup — sidebar may not be in DOM when controller connects
+  getSidebar() {
+    if (!this._sidebar) this._sidebar = document.getElementById("doc-sidebar")
+    return this._sidebar
   }
 
   disconnect() {
@@ -75,14 +80,15 @@ export default class extends Controller {
     const msgId = btn.dataset.msgId
 
     this.close()
-    if (!this.sidebar) return
+    const sidebar = this.getSidebar()
+    if (!sidebar) return
 
-    const titleEl = this.sidebar.querySelector(".doc-sidebar__title")
-    const metaEl = this.sidebar.querySelector(".doc-sidebar__meta")
-    const contentEl = this.sidebar.querySelector(".doc-sidebar__content")
-    const actionsEl = this.sidebar.querySelector(".doc-sidebar__actions")
+    const titleEl = sidebar.querySelector(".doc-sidebar__title")
+    const metaEl = sidebar.querySelector(".doc-sidebar__meta")
+    const contentEl = sidebar.querySelector(".doc-sidebar__content")
+    const actionsEl = sidebar.querySelector(".doc-sidebar__actions")
 
-    this.sidebar.classList.add("doc-sidebar--open")
+    sidebar.classList.add("doc-sidebar--open")
     contentEl.innerHTML = '<div class="documents-loading">Loading preview...</div>'
 
     try {
@@ -120,7 +126,7 @@ export default class extends Controller {
   }
 
   closePreview() {
-    this.sidebar?.classList.remove("doc-sidebar--open")
+    this.getSidebar()?.classList.remove("doc-sidebar--open")
   }
 
   showCreateForm() {
