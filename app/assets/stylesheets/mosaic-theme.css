@@ -442,7 +442,7 @@ body.sidebar {
 /* Closed state: pull button away from left screen edge */
 @media (max-width: 100ch) {
   .sidebar__toggle {
-    margin-inline-start: 1rem;
+    inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1 - 1rem) !important;
   }
 }
 
