@@ -657,7 +657,7 @@ body.sidebar {
 /* --- Relax message body max-width for row layout, keep room for actions --- */
 .message__body {
   max-inline-size: calc(100% - var(--btn-size, 2rem)) !important;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* --- Day separator — quiet centered line --- */
@@ -1206,9 +1206,14 @@ legend {
   }
 }
 
-/* --- Mobile: styled dropdown --- */
+/* --- Mobile: styled dropdown — must escape overflow clipping --- */
 @media (hover: none) and (pointer: coarse) {
+  .message:has([open]) {
+    z-index: 10;
+  }
+
   .message__actions-menu {
+    z-index: 20;
     border-radius: 0.75rem;
     box-shadow:
       0 2px 8px rgba(0, 0, 0, 0.06),
