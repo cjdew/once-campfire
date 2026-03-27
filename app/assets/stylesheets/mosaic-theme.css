@@ -954,6 +954,9 @@ html[data-theme="dark"] .sidebar__tools .theme-toggle__btn.theme-toggle--active 
 .thread-sidebar__parent {
   background-color: var(--msh-bg-surface-subtle, rgba(0, 0, 0, 0.03)) !important;
   border-block-end: 1px solid var(--msh-border-subtle) !important;
+  overflow-y: auto !important;
+  flex-shrink: 1 !important;
+  max-block-size: 40vh;
 }
 
 .thread-sidebar__parent .message__body-content {
