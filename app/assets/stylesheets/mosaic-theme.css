@@ -453,6 +453,13 @@ body.sidebar {
   }
 }
 
+/* Hide sidebar collapse arrow on mobile — hamburger handles open/close */
+@media (max-width: 100ch) {
+  .sidebar__collapse-toggle {
+    display: none !important;
+  }
+}
+
 /* Unread indicator dot on toggle — gold */
 #sidebar:where(:not(.open):has(.unread)) .sidebar__toggle::after {
   background-color: var(--msh-accent-brand) !important;
