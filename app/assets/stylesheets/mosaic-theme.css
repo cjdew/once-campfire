@@ -86,7 +86,7 @@
    ============================================================================ */
 
 /* --- Typography --- */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+/* DM Sans loaded via <link rel="preload"> in application.html.erb (non-render-blocking) */
 
 /* --- Color System --- */
 :root {
@@ -430,6 +430,22 @@ body.sidebar {
   inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1) !important;
 }
 
+/* Hamburger icon: always black */
+.sidebar__toggle img {
+  filter: invert(0%) !important;
+}
+
+#sidebar.open .sidebar__toggle img {
+  filter: invert(0%) !important;
+}
+
+/* Closed state: pull button away from left screen edge */
+@media (max-width: 100ch) {
+  .sidebar__toggle {
+    inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1 - 1rem) !important;
+  }
+}
+
 #sidebar.open .sidebar__toggle {
   @media (max-width: 100ch) {
     inset-inline-start: auto !important;
@@ -437,13 +453,23 @@ body.sidebar {
   }
 }
 
-#sidebar.open .sidebar__toggle img {
-  filter: invert(100%) !important;
+/* Hide sidebar collapse arrow on mobile — hamburger handles open/close */
+@media (max-width: 100ch) {
+  .sidebar__collapse-toggle {
+    display: none !important;
+  }
 }
 
 /* Unread indicator dot on toggle — gold */
 #sidebar:where(:not(.open):has(.unread)) .sidebar__toggle::after {
   background-color: var(--msh-accent-brand) !important;
+}
+
+/* Mobile: push nav header right to clear hamburger + add breathing room */
+@media (max-width: 100ch) {
+  #nav {
+    padding-inline-start: calc(var(--inline-space) * 1.5 + var(--btn-size) + 1.5rem) !important;
+  }
 }
 
 /* ============================================================================
@@ -574,6 +600,8 @@ body.sidebar {
 
 .messages {
   --message-space: 0.25rem !important;
+  /* Ensure messages start below the fixed nav header */
+  padding-block-start: calc(var(--btn-size, 2.5rem) + 1.5rem) !important;
 }
 
 /* --- Message spacing — consistent gaps per typography research --- */
