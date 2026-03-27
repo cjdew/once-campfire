@@ -1107,8 +1107,16 @@ legend {
   .message__actions {
     position: absolute !important;
     inset-block-start: -0.5rem;
+    inset-inline-start: 0;
     inset-inline-end: 0.5rem;
     z-index: 5;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+  }
+
+  .message__actions > * {
+    pointer-events: auto;
   }
 
   /* Restyle the trigger button as a small pill */
