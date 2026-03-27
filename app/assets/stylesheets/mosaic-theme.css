@@ -430,14 +430,20 @@ body.sidebar {
   inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1) !important;
 }
 
-/* Hamburger icon: black when sidebar closed */
+/* Hamburger icon: always black */
 .sidebar__toggle img {
   filter: invert(0%) !important;
 }
 
-/* Hamburger icon: white when sidebar open (dark bg) */
 #sidebar.open .sidebar__toggle img {
-  filter: invert(100%) !important;
+  filter: invert(0%) !important;
+}
+
+/* Closed state: add right padding so button doesn't touch screen edge */
+@media (max-width: 100ch) {
+  .sidebar__toggle {
+    inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1 + 0.5rem) !important;
+  }
 }
 
 #sidebar.open .sidebar__toggle {
