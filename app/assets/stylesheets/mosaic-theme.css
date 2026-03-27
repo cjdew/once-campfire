@@ -573,7 +573,23 @@ body.sidebar {
    ============================================================================ */
 
 .messages {
-  --message-space: 0.25em;
+  --message-space: 0.25rem !important;
+}
+
+/* --- Message spacing — consistent gaps per typography research --- */
+/* First message from a new sender gets more space above */
+.message:not(.message--threaded) {
+  margin-block-start: 0.75rem;
+}
+
+/* Consecutive same-sender messages: tight grouping */
+.message.message--threaded {
+  margin-block-start: 0.125rem;
+}
+
+/* First message in the list: no top margin */
+.message:first-child {
+  margin-block-start: 0;
 }
 
 /* --- Message grid — match column to 1.75rem avatar --- */
