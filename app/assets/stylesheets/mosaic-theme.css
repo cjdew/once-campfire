@@ -26,7 +26,7 @@
    ──────────────────────────────────────────────────────────────
    --msh-text-primary        │ #16181D  │ Message body, headings
    --msh-text-secondary      │ #5F6672  │ Sender names, labels
-   --msh-text-tertiary       │ #8B92A0  │ Timestamps, meta, hints
+   --msh-text-tertiary       │ #6E7787  │ Timestamps, meta, hints (4.6:1 AA)
    --msh-text-on-sidebar     │ w/0.7    │ Default sidebar text
    --msh-text-on-sidebar-strong │ #FFF  │ Active/unread sidebar
    --msh-text-on-sidebar-muted  │ w/0.5 │ DM author names
@@ -141,7 +141,7 @@
   /* --- Text --- */
   --msh-text-primary: #16181D;
   --msh-text-secondary: #5F6672;
-  --msh-text-tertiary: #8B92A0;
+  --msh-text-tertiary: #6E7787;
   --msh-text-on-sidebar: rgba(255, 255, 255, 0.7);
   --msh-text-on-sidebar-strong: #FFFFFF;
   --msh-text-on-sidebar-muted: rgba(255, 255, 255, 0.5);
@@ -202,7 +202,7 @@
     --msh-bg-code: #1e293b;
     --msh-text-primary: #E8E8E8;
     --msh-text-secondary: #9CA3AF;
-    --msh-text-tertiary: #6B7280;
+    --msh-text-tertiary: #8A909B;
     --msh-border-subtle: #2e2e2e;
     --msh-border-strong: #444444;
     --msh-border-avatar: #444444;
@@ -679,7 +679,7 @@ body.sidebar {
   font-weight: var(--msh-type-tiny-wt);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--msh-text-tertiary, #8B92A0);
+  color: var(--msh-text-tertiary, #6E7787);
   background-color: transparent;
   border: none;
   box-shadow: none;
