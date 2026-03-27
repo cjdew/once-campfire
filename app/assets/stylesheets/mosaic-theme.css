@@ -1090,42 +1090,45 @@ legend {
 }
 
 /* ============================================================================
-   INLINE MESSAGE ACTIONS — Slack-style hover toolbar
-   Replaces the three-dot dropdown with a compact inline toolbar that appears
-   on message hover. Shows emoji quick-reactions, reply, copy link, and edit
-   as a horizontal strip anchored to the top-right of the message.
+   INLINE MESSAGE ACTIONS — Compact horizontal toolbar on click
+   Restyles the three-dot dropdown from a vertical popover to a compact
+   horizontal toolbar when opened. The trigger button is repositioned to
+   the top-right of the message on hover.
    ============================================================================ */
 
-/* --- Desktop: show actions as inline toolbar on hover --- */
+/* --- Desktop: restyle opened menu as horizontal toolbar --- */
 @media (hover: hover) and (pointer: fine) {
 
-  /* Hide the three-dot trigger button — toolbar replaces it */
-  .message__options-btn {
-    display: none !important;
+  /* Position the actions trigger at top-right of message on hover */
+  .message {
+    position: relative;
   }
 
-  /* Force the actions menu visible on message hover (bypass <details> toggle) */
-  .message:hover .message__actions-menu {
-    display: flex !important;
-  }
-
-  /* Reposition the actions container to top-right of message */
   .message__actions {
     position: absolute !important;
-    inset-block-start: -0.75rem;
+    inset-block-start: -0.5rem;
     inset-inline-end: 0.5rem;
     z-index: 5;
   }
 
-  /* Restyle the menu as a compact horizontal toolbar */
-  .message__actions-menu {
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-    display: none;
+  /* Restyle the trigger button as a small pill */
+  .message__options-btn {
+    border-radius: 0.5rem !important;
+    border: 1px solid var(--msh-border-subtle) !important;
+    background-color: var(--msh-bg-surface, #FFFFFF) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+    padding: 0.15rem 0.35rem !important;
+  }
+
+  /* When opened, restyle the menu as a horizontal toolbar */
+  .message:has([open]) .message__actions-menu {
+    display: flex !important;
     flex-direction: row !important;
     align-items: center;
     gap: 0;
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
     padding: 0.15rem !important;
     border-radius: 0.5rem;
     border: 1px solid var(--msh-border-subtle);
@@ -1142,7 +1145,7 @@ legend {
   }
 
   /* Quick-boost emojis: horizontal row */
-  .message__actions-menu .quick-boosts {
+  .message:has([open]) .message__actions-menu .quick-boosts {
     display: flex !important;
     grid-template-columns: none;
     gap: 0;
@@ -1159,13 +1162,13 @@ legend {
     font-size: 1rem;
   }
 
-  /* Hide the standalone "add boost" button in the quick-boosts row */
+  /* Hide the standalone "add boost" button in the toolbar */
   .message__actions-menu .message__boost-btn {
     display: none !important;
   }
 
   /* Action buttons row: reply, copy link, edit — horizontal */
-  .message__actions-menu .message__actions-grid {
+  .message:has([open]) .message__actions-menu .message__actions-grid {
     display: flex !important;
     flex-wrap: nowrap;
     border-top: none !important;
@@ -1188,11 +1191,6 @@ legend {
     height: 16px;
   }
 
-  /* Ensure the message has relative positioning for the toolbar anchor */
-  .message {
-    position: relative;
-  }
-
   /* Subtle hover background on individual toolbar buttons */
   .message__actions-menu .btn.message__action-btn:hover {
     background-color: var(--msh-bg-surface-subtle) !important;
@@ -1200,7 +1198,7 @@ legend {
   }
 }
 
-/* --- Mobile: keep the existing dropdown behavior --- */
+/* --- Mobile: styled dropdown --- */
 @media (hover: none) and (pointer: coarse) {
   .message__actions-menu {
     border-radius: 0.75rem;
@@ -1211,9 +1209,14 @@ legend {
   }
 }
 
-/* --- Dark mode toolbar adjustments --- */
+/* --- Dark mode adjustments --- */
 @media (hover: hover) and (pointer: fine) and (prefers-color-scheme: dark) {
-  .message__actions-menu {
+  .message__options-btn {
+    background-color: var(--msh-bg-surface-raised, #2A2A2A) !important;
+    border-color: var(--msh-border-strong, #404040) !important;
+  }
+
+  .message:has([open]) .message__actions-menu {
     background-color: var(--msh-bg-surface-raised, #2A2A2A) !important;
     border-color: var(--msh-border-strong, #404040);
     box-shadow:
