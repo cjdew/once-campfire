@@ -209,6 +209,21 @@
     --msh-state-mention-bg: rgba(227, 181, 5, 0.15);
     --msh-link-default: #7BA4E0;
     --msh-scrollbar-thumb: #444444;
+
+    /* Dark mode weight reduction — irradiation illusion compensation */
+    --msh-type-body-wt: 380;
+    --msh-type-sender-wt: 550;
+    --msh-type-header-wt: 550;
+    --msh-type-button-wt: 550;
+    --msh-type-section-wt: 650;
+    --msh-type-tiny-wt: 450;
+  }
+}
+
+/* Dark mode: slightly more open letter-spacing */
+@media (prefers-color-scheme: dark) {
+  html, body {
+    letter-spacing: -0.005em;
   }
 }
 
@@ -712,6 +727,12 @@ body.sidebar {
   letter-spacing: -0.01em;
   text-transform: none;
   color: var(--msh-text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  .message__author {
+    font-weight: 600;
+  }
 }
 
 /* --- Hide timestamp on threaded (consecutive same-user) messages --- */
