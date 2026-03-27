@@ -568,6 +568,13 @@ body.sidebar {
   padding: 0.25rem 0 !important;
 }
 
+/* Desktop: ensure message body is at least as wide as the hover toolbar */
+@media (hover: hover) and (pointer: fine) {
+  .message__body-content {
+    min-inline-size: 14rem;
+  }
+}
+
 /* Hover: subtle row highlight */
 .message:hover {
   background-color: rgba(0, 0, 0, 0.02);
