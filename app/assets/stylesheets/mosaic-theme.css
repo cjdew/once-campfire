@@ -716,7 +716,11 @@ body.sidebar {
 
 /* --- Day separator — quiet centered line --- */
 .message__day-separator {
+  display: flex !important;
+  align-items: center;
+  gap: 1ch;
   margin-block: 1.5rem 0.75rem;
+  visibility: visible;
 }
 
 .message__day-separator time,
@@ -731,6 +735,7 @@ body.sidebar {
   box-shadow: none;
   border-radius: 0;
   padding: 0 1.5ch;
+  white-space: nowrap;
 }
 
 .message__day-separator::before,
@@ -744,8 +749,6 @@ body.sidebar {
 
 .message--first-of-day .message__day-separator {
   display: flex !important;
-  align-items: center;
-  gap: 1ch;
   visibility: visible;
 }
 
