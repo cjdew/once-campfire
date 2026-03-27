@@ -568,10 +568,11 @@ body.sidebar {
   padding: 0.25rem 0 !important;
 }
 
-/* Desktop: ensure message body is at least as wide as the hover toolbar */
+/* Desktop: ensure message body is at least as wide as the hover toolbar
+   5 emojis (~30px each) + divider + 3 actions (~28px each) + padding ≈ 250px */
 @media (hover: hover) and (pointer: fine) {
   .message__body-content {
-    min-inline-size: 14rem;
+    min-inline-size: 16rem;
   }
 }
 
@@ -1162,11 +1163,12 @@ legend {
     display: none !important;
   }
 
-  /* Quick-boost emojis: horizontal row */
+  /* Quick-boost emojis: single horizontal row, show first 5 */
   .message:has([open]) .message__actions-menu .quick-boosts {
     display: flex !important;
     grid-template-columns: none;
     gap: 0;
+    flex-wrap: nowrap;
   }
 
   /* Emoji buttons in the toolbar */
@@ -1174,6 +1176,11 @@ legend {
     padding: 0.2rem 0.3rem !important;
     min-width: auto;
     flex-basis: auto !important;
+  }
+
+  /* Show only first 5 emoji reactions in toolbar, hide the rest */
+  .message__actions-menu .quick-boosts form:nth-child(n+6) {
+    display: none !important;
   }
 
   .message__actions-menu .quick-boosts .boost-character {
