@@ -1605,6 +1605,11 @@ legend {
 }
 
 /* --- Dropdown Panel --- */
+/* #nav has pointer-events:none — restore on wrapper and dropdown */
+.documents-wrapper {
+  pointer-events: auto;
+}
+
 .documents-dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -1621,6 +1626,7 @@ legend {
   flex-direction: column;
   overflow: hidden;
   font-family: var(--msh-font-family);
+  pointer-events: auto;
 }
 
 .documents-dropdown--open {
