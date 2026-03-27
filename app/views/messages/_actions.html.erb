@@ -1,8 +1,8 @@
 <%# Be sure to check/update messages/_template.html.erb when changing this file %>
 
-<div class="message__actions" data-controller="soft-keyboard">
+<div class="message__actions" data-controller="soft-keyboard hover-actions">
   <%= tag.details class: "position-relative",
-      data: { controller: "popup", action: "keydown.esc->popup#close toggle->popup#toggle click@document->popup#closeOnClickOutside", popup_orientation_top_class: "popup-orientation-top" } do %>
+      data: { controller: "popup", hover_actions_target: "details", action: "keydown.esc->popup#close toggle->popup#toggle click@document->popup#closeOnClickOutside", popup_orientation_top_class: "popup-orientation-top" } do %>
     <summary class="btn message__action-btn message__options-btn">
       <%= image_tag "menu-dots-horizontal.svg", size: 20, class: "colorize--black", aria: { hidden: "true" } %>
       <span class="for-screen-reader">Message options</span>
