@@ -439,10 +439,10 @@ body.sidebar {
   filter: invert(0%) !important;
 }
 
-/* Closed state: add right padding so button doesn't touch screen edge */
+/* Closed state: pull button away from left screen edge */
 @media (max-width: 100ch) {
   .sidebar__toggle {
-    inset-inline-end: calc((var(--btn-size) + max(var(--inline-space), 1vw)) * -1 + 0.5rem) !important;
+    margin-inline-start: 0.5rem;
   }
 }
 
