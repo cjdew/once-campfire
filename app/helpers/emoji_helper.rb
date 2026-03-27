@@ -4,7 +4,6 @@ module EmojiHelper
     "❤️" => "Red heart",
     "😂" => "Face with tears of joy",
     "🔥" => "Fire",
-    "✅" => "Check mark",
     "🔲" => "Black square button"
   }
 end
