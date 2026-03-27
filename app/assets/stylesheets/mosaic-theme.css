@@ -1293,6 +1293,35 @@ legend {
 
 .boost-item { border-radius: 0.5rem; }
 
+/* --- Reply badge — themed metadata --- */
+.reply-badge {
+  font-family: var(--msh-font-family);
+  font: var(--msh-type-meta);
+  font-weight: 600;
+  color: var(--msh-accent-brand-hover) !important;
+  text-decoration: none;
+  padding: 0.25rem 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.reply-badge::before {
+  content: "\1F4AC";
+  font-size: 0.75rem;
+}
+
+.reply-badge:hover {
+  color: var(--msh-accent-brand) !important;
+  text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+  .reply-badge {
+    color: var(--msh-accent-brand) !important;
+  }
+}
+
 .autocomplete {
   border-radius: 0.625rem;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
