@@ -1211,13 +1211,19 @@ legend {
     pointer-events: auto;
   }
 
-  /* Restyle the trigger button as a small pill */
+  /* Restyle the trigger button as a small pill, hidden until hover */
   .message__options-btn {
     border-radius: 0.5rem !important;
     border: 1px solid var(--msh-border-subtle) !important;
     background-color: var(--msh-bg-surface, #FFFFFF) !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
     padding: 0.15rem 0.35rem !important;
+    visibility: hidden;
+  }
+
+  .message:hover .message__options-btn,
+  .message:has([open]) .message__options-btn {
+    visibility: visible;
   }
 
   /* When opened, restyle the menu as a horizontal toolbar */
@@ -1304,8 +1310,16 @@ legend {
   }
 }
 
-/* --- Mobile: styled dropdown — must escape overflow clipping --- */
+/* --- Mobile: position ellipsis at right side of message --- */
 @media (hover: none) and (pointer: coarse) {
+  .message__actions {
+    position: absolute !important;
+    inset-block-start: 0.5rem;
+    inset-inline-end: 0.5rem;
+    inset-inline-start: auto !important;
+    z-index: 5;
+  }
+
   .message:has([open]) {
     z-index: 10;
   }
