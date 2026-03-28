@@ -1211,19 +1211,9 @@ legend {
     pointer-events: auto;
   }
 
-  /* Restyle the trigger button as a small pill, hidden until hover */
+  /* Hide the ellipsis trigger on desktop — hover opens the toolbar directly */
   .message__options-btn {
-    border-radius: 0.5rem !important;
-    border: 1px solid var(--msh-border-subtle) !important;
-    background-color: var(--msh-bg-surface, #FFFFFF) !important;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
-    padding: 0.15rem 0.35rem !important;
-    visibility: hidden;
-  }
-
-  .message:hover .message__options-btn,
-  .message:has([open]) .message__options-btn {
-    visibility: visible;
+    display: none !important;
   }
 
   /* When opened, restyle the menu as a horizontal toolbar */
