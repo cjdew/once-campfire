@@ -3,11 +3,17 @@ import { cable } from "@hotwired/turbo-rails"
 import { ignoringBriefDisconnects } from "helpers/dom_helpers"
 
 export default class extends Controller {
-  static targets = [ "panel", "badge" ]
+  static targets = [ "badge" ]
 
   async connect() {
-    // Move panel to body so it escapes #nav's stacking context (z-index: 2)
-    document.body.appendChild(this.panelTarget)
+    // Grab the panel and move it to body to escape #nav's stacking context
+    this.panel = this.element.querySelector("[data-notification-panel]")
+    if (this.panel) {
+      document.body.appendChild(this.panel)
+    }
+
+    this.boundCloseOnClickOutside = this.closeOnClickOutside.bind(this)
+    document.addEventListener("click", this.boundCloseOnClickOutside)
 
     this.channel ??= await cable.subscribeTo({ channel: "NotificationsChannel" }, {
       received: this.#received.bind(this)
@@ -15,14 +21,21 @@ export default class extends Controller {
   }
 
   disconnect() {
+    document.removeEventListener("click", this.boundCloseOnClickOutside)
+
+    if (this.panel && this.panel.parentNode === document.body) {
+      this.panel.remove()
+    }
+
     ignoringBriefDisconnects(this.element, () => {
       this.channel?.unsubscribe()
       this.channel = null
     })
   }
 
-  toggle() {
-    if (this.panelTarget.classList.contains("notifications-dropdown--open")) {
+  toggle(event) {
+    event.stopPropagation()
+    if (this.panel.classList.contains("notifications-dropdown--open")) {
       this.close()
     } else {
       this.open()
@@ -34,35 +47,33 @@ export default class extends Controller {
       headers: { "Accept": "text/html" }
     })
     const html = await response.text()
-    this.panelTarget.innerHTML = html
+    this.panel.innerHTML = html
     this.#positionPanel()
-    this.panelTarget.classList.add("notifications-dropdown--open")
+    this.panel.classList.add("notifications-dropdown--open")
   }
 
   #positionPanel() {
     const rect = this.element.getBoundingClientRect()
-    this.panelTarget.style.top = `${rect.bottom + 4}px`
-    this.panelTarget.style.right = `${window.innerWidth - rect.right}px`
+    this.panel.style.top = `${rect.bottom + 4}px`
+    this.panel.style.right = `${window.innerWidth - rect.right}px`
   }
 
   close() {
-    this.panelTarget.classList.remove("notifications-dropdown--open")
+    this.panel.classList.remove("notifications-dropdown--open")
   }
 
   closeOnClickOutside(event) {
-    if (!this.element.contains(event.target) && !this.panelTarget.contains(event.target)) {
+    if (!this.element.contains(event.target) && !this.panel.contains(event.target)) {
       this.close()
     }
   }
 
   #received({ type, unread_count }) {
     if (type === "new_notification") {
-      // Update badge visibility
       if (this.hasBadgeTarget) {
         this.badgeTarget.style.display = unread_count > 0 ? "" : "none"
       }
-      // If dropdown is open, refresh it
-      if (this.panelTarget.classList.contains("notifications-dropdown--open")) {
+      if (this.panel.classList.contains("notifications-dropdown--open")) {
         this.open()
       }
     }

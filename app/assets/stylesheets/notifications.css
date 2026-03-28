@@ -36,7 +36,7 @@
   display: block !important;
 }
 
-[data-notification-dropdown-target="panel"] {
+[data-notification-panel] {
   display: none;
   position: fixed;
   top: auto;

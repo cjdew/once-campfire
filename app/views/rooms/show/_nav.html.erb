@@ -28,7 +28,7 @@
       <span class="notifications-bell__badge" data-notification-dropdown-target="badge" <% if unread_notification_count == 0 %>style="display: none"<% end %>></span>
       <span class="for-screen-reader">Notifications</span>
     </button>
-    <div data-notification-dropdown-target="panel" data-action="click@window->notification-dropdown#closeOnClickOutside"></div>
+    <div data-notification-panel></div>
   </div>
 
   <% doc_room_name = room.direct? ? "DM: #{room.users.map(&:name).sort.join(' & ')}" : room_display_name(room) %>
