@@ -724,3 +724,23 @@ body:has(.sidebar--collapsed) {
 .sidebar--collapsed .sidebar__section-label {
   display: none;
 }
+
+/* Unread count pills */
+.unread-pill {
+  background-color: var(--unread-pill-color, #5b6eea);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1em 0.45em;
+  border-radius: 0.75em;
+  min-width: 1.25em;
+  text-align: center;
+  line-height: 1.4;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* DM rooms get orange pills */
+.sidebar__room-wrapper .room[data-room-type="direct"] .unread-pill {
+  --unread-pill-color: #e8815a;
+}
