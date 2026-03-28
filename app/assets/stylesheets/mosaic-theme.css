@@ -1196,17 +1196,18 @@ legend {
     position: relative;
   }
 
+  .message__body-content {
+    position: relative;
+  }
+
   .message__actions {
     position: absolute !important;
-    inset-block-start: auto;
-    inset-block-end: -0.25rem;
+    inset-block-start: 100%;
     inset-inline-start: 0;
-    inset-inline-end: 0;
     z-index: 5;
     display: flex;
     justify-content: flex-start;
     pointer-events: none;
-    transform: translateY(100%);
   }
 
   .message__actions > * {
