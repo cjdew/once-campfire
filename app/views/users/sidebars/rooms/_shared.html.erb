@@ -18,6 +18,12 @@
     <% if membership&.favorited? %>
       <span class="sidebar__star sidebar__star--active">&#9733;</span>
     <% end %>
+    <% if local_assigns[:unread] && membership %>
+      <% count = membership.unread_count %>
+      <% if count > 0 %>
+        <span data-unread-pill class="unread-pill"><%= count > 99 ? "99+" : count %></span>
+      <% end %>
+    <% end %>
   <% end %>
 
   <% if membership %>

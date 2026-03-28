@@ -12,7 +12,8 @@
     <%= link_to_room membership.room, class: [ "room btn align-center gap txt-nowrap", "unread": membership.unread? ],
           data: {
             sorted_list_target: nil,
-            action: "sidebar-collapse#expandBeforeNavigate"
+            action: "sidebar-collapse#expandBeforeNavigate",
+            room_type: "direct"
           } do %>
       <span class="avatar" style="--avatar-size: 1.5em;">
         <%= image_tag fresh_user_avatar_path(members.first), size: 24, aria: { hidden: "true" } %>
@@ -29,6 +30,13 @@
 
       <% if membership.favorited? %>
         <span class="sidebar__star sidebar__star--active">&#9733;</span>
+      <% end %>
+
+      <% if membership.unread? %>
+        <% count = membership.unread_count %>
+        <% if count > 0 %>
+          <span data-unread-pill class="unread-pill" style="--unread-pill-color: #e8815a;"><%= count > 99 ? "99+" : count %></span>
+        <% end %>
       <% end %>
     <% end %>
 
