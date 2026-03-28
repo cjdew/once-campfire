@@ -101,6 +101,10 @@ Rails.application.routes.draw do
 
   resource :unfurl_link, only: :create
 
+  resources :notifications, only: :index do
+    post :mark_all_read, on: :collection
+  end
+
   get "webmanifest"    => "pwa#manifest"
   get "service-worker" => "pwa#service_worker"
 
