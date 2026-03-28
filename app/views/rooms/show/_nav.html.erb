@@ -18,6 +18,21 @@
 
   <%= render "rooms/involvements/bell", room: room %>
 
+  <div class="notifications-wrapper" data-controller="notification-dropdown">
+    <button class="btn notifications-bell" data-action="click->notification-dropdown#toggle">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+      <% unread_notification_count = Notification.where(user: Current.user, read_at: nil).count %>
+      <% if unread_notification_count > 0 %>
+        <span class="notifications-bell__badge" data-notification-dropdown-target="badge"></span>
+      <% end %>
+      <span class="for-screen-reader">Notifications</span>
+    </button>
+    <div data-notification-dropdown-target="panel" data-action="click@window->notification-dropdown#closeOnClickOutside"></div>
+  </div>
+
   <% doc_room_name = room.direct? ? "DM: #{room.users.map(&:name).sort.join(' & ')}" : room_display_name(room) %>
   <div class="documents-wrapper" data-controller="documents" data-documents-room-id-value="<%= room.id %>" data-documents-room-name-value="<%= doc_room_name %>">
     <button class="btn documents-icon-btn" data-documents-target="icon" data-action="click->documents#toggle" title="Documents">
