@@ -32,6 +32,7 @@ export default class extends Controller {
 
     if (room) {
       room.classList.remove(this.unreadClass)
+      this.#updatePill(room, 0)
       this.dispatch("read", { detail: { targetId: roomId } })
     }
   }
@@ -47,15 +48,39 @@ export default class extends Controller {
     this.#disconnected = true
   }
 
-  #unread({ roomId }) {
+  #unread({ roomId, count }) {
     const unreadRoom = this.#findRoomTarget(roomId)
 
     if (unreadRoom) {
       if (Current.room.id != roomId) {
         unreadRoom.classList.add(this.unreadClass)
+        if (count !== undefined) {
+          this.#updatePill(unreadRoom, count)
+        }
       }
 
       this.dispatch("unread", { detail: { targetId: unreadRoom.id } })
+    }
+  }
+
+  #updatePill(roomElement, count) {
+    let pill = roomElement.querySelector("[data-unread-pill]")
+
+    if (count > 0) {
+      const display = count > 99 ? "99+" : count
+      if (pill) {
+        pill.textContent = display
+      } else {
+        pill = document.createElement("span")
+        pill.setAttribute("data-unread-pill", "")
+        pill.className = "unread-pill"
+        pill.textContent = display
+        // Insert pill inside the room link, after the text
+        const link = roomElement.querySelector("a")
+        if (link) link.appendChild(pill)
+      }
+    } else if (pill) {
+      pill.remove()
     }
   }
 
