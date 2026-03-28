@@ -691,10 +691,10 @@ body.sidebar {
   justify-content: start !important;
 }
 @media (hover: hover) and (pointer: fine) {
-  /* Own-message toolbar: same top-right positioning as other messages */
+  /* Own-message toolbar: same bottom positioning as other messages */
   .message--me .message__actions {
-    inset-inline-start: auto !important;
-    inset-inline-end: 0.5rem !important;
+    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
   }
 }
 @media (hover: none) and (pointer: coarse) and (min-width: 100ch) {
@@ -1198,13 +1198,15 @@ legend {
 
   .message__actions {
     position: absolute !important;
-    inset-block-start: -0.5rem;
+    inset-block-start: auto;
+    inset-block-end: -0.25rem;
     inset-inline-start: 0;
-    inset-inline-end: 0.5rem;
+    inset-inline-end: 0;
     z-index: 5;
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     pointer-events: none;
+    transform: translateY(100%);
   }
 
   .message__actions > * {
