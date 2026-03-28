@@ -10,12 +10,14 @@ class MessageThread::PushReplyJob < ApplicationJob
     recipients.merge(message.mentionees)
     recipients.delete(message.creator)
 
-    return if recipients.empty?
+    if recipients.any?
+      Notification::Creator.new(message).create_thread_reply_notifications(recipients)
 
-    MessageThread::ReplyPusher.new(
-      room: room,
-      message: message,
-      recipients: recipients.to_a
-    ).push
+      MessageThread::ReplyPusher.new(
+        room: room,
+        message: message,
+        recipients: recipients.to_a
+      ).push
+    end
   end
 end
