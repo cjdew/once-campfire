@@ -229,3 +229,19 @@
   0% { background-color: color-mix(in srgb, var(--color-primary-container) 30%, transparent); }
   100% { background-color: transparent; }
 }
+
+/* Reply badge unread indicator */
+.reply-badge--unread {
+  background: rgba(91, 110, 234, 0.1);
+  border-color: rgba(91, 110, 234, 0.25);
+}
+
+.reply-badge__new {
+  background: #5b6eea;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.05em 0.4em;
+  border-radius: 0.5em;
+  margin-left: 0.4em;
+}

@@ -1,10 +1,14 @@
 <%= turbo_frame_tag dom_id(message, :reply_badge) do %>
   <% if message.replies_count > 0 %>
-    <a class="reply-badge"
+    <% new_reply_count = Current.user ? Notification.where(user: Current.user, message: message, kind: :thread_reply, read_at: nil).count : 0 %>
+    <a class="reply-badge <%= 'reply-badge--unread' if new_reply_count > 0 %>"
        href="#"
        data-action="click->thread-sidebar#open"
        data-thread-sidebar-message-id-param="<%= message.id %>">
-      <%= message.replies_count %> <%= "reply".pluralize(message.replies_count) %>
+      <span class="reply-badge__count"><%= message.replies_count %> <%= "reply".pluralize(message.replies_count) %></span>
+      <% if new_reply_count > 0 %>
+        <span class="reply-badge__new"><%= new_reply_count %> new</span>
+      <% end %>
     </a>
   <% end %>
 <% end %>
