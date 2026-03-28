@@ -32,7 +32,14 @@ export default class extends Controller {
     })
     const html = await response.text()
     this.panelTarget.innerHTML = html
+    this.#positionPanel()
     this.panelTarget.classList.add("notifications-dropdown--open")
+  }
+
+  #positionPanel() {
+    const rect = this.element.getBoundingClientRect()
+    this.panelTarget.style.top = `${rect.bottom + 4}px`
+    this.panelTarget.style.right = `${window.innerWidth - rect.right}px`
   }
 
   close() {

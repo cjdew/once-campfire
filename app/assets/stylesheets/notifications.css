@@ -1,6 +1,7 @@
 /* Notifications bell and dropdown */
 .notifications-wrapper {
   position: relative;
+  pointer-events: auto;
 }
 
 .notifications-bell {
@@ -37,12 +38,13 @@
 
 [data-notification-dropdown-target="panel"] {
   display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
+  position: fixed;
+  top: auto;
+  right: auto;
   width: 22em;
   max-height: 28em;
   overflow-y: auto;
+  pointer-events: auto;
   background: var(--color-surface, var(--color-background));
   border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
   border-radius: 0.5em;
