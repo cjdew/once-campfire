@@ -1,5 +1,4 @@
-<% cache membership do %>
-  <% members = membership.room.users.without(membership.user).presence || [ membership.user ] %>
+<% members = membership.room.users.without(membership.user).presence || [ membership.user ] %>
 
   <div class="sidebar__room-wrapper"
        id="<%= dom_id(membership.room, :list) %>"
@@ -35,7 +34,7 @@
       <% if membership.unread? %>
         <% count = membership.unread_count %>
         <% if count > 0 %>
-          <span data-unread-pill class="unread-pill" style="--unread-pill-color: #e8815a;"><%= count > 99 ? "99+" : count %></span>
+          <span data-unread-pill class="unread-pill"><%= count > 99 ? "99+" : count %></span>
         <% end %>
       <% end %>
     <% end %>
@@ -44,4 +43,3 @@
       <%= membership.favorited? ? "&#9733;".html_safe : "&#9734;".html_safe %>
     </button>
   </div>
-<% end %>

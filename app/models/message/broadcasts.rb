@@ -16,7 +16,6 @@ module Message::Broadcasts
       broadcast_append_to room, :messages, target: [ room, :messages ]
     end
     ActionCable.server.broadcast("unread_rooms", { roomId: room.id })
-    broadcast_unread_counts
   end
 
   def broadcast_remove
@@ -36,13 +35,4 @@ module Message::Broadcasts
     end
   end
 
-  private
-    def broadcast_unread_counts
-      room.memberships.visible.where.not(user: creator).each do |membership|
-        ActionCable.server.broadcast(
-          "user_#{membership.user_id}_unread_rooms",
-          { roomId: room.id, count: membership.unread_count }
-        )
-      end
-    end
 end

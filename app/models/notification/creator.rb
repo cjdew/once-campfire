@@ -34,6 +34,8 @@ class Notification::Creator
       broadcast_notification(notification)
     rescue ActiveRecord::RecordNotUnique
       # Already notified for this message — skip
+    rescue => e
+      Rails.logger.error("[Notification::Creator] Failed to create notification: #{e.message}")
     end
 
     def broadcast_notification(notification)

@@ -25,9 +25,7 @@
         <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
       </svg>
       <% unread_notification_count = Notification.where(user: Current.user, read_at: nil).count %>
-      <% if unread_notification_count > 0 %>
-        <span class="notifications-bell__badge" data-notification-dropdown-target="badge"></span>
-      <% end %>
+      <span class="notifications-bell__badge" data-notification-dropdown-target="badge" <% if unread_notification_count == 0 %>style="display: none"<% end %>></span>
       <span class="for-screen-reader">Notifications</span>
     </button>
     <div data-notification-dropdown-target="panel" data-action="click@window->notification-dropdown#closeOnClickOutside"></div>

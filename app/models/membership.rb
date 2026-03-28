@@ -18,7 +18,12 @@ class Membership < ApplicationRecord
 
   def mark_read
     latest = room.messages.root_messages.order(:id).last
-    update!(unread_at: nil, last_read_message_id: latest&.id)
+    return unless latest
+
+    self.class.where(id: id)
+      .where("last_read_message_id IS NULL OR last_read_message_id < ?", latest.id)
+      .update_all(unread_at: nil, last_read_message_id: latest.id)
+    reload
   end
 
   def read
