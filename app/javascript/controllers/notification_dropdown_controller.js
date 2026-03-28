@@ -6,6 +6,9 @@ export default class extends Controller {
   static targets = [ "panel", "badge" ]
 
   async connect() {
+    // Move panel to body so it escapes #nav's stacking context (z-index: 2)
+    document.body.appendChild(this.panelTarget)
+
     this.channel ??= await cable.subscribeTo({ channel: "NotificationsChannel" }, {
       received: this.#received.bind(this)
     })
@@ -47,7 +50,7 @@ export default class extends Controller {
   }
 
   closeOnClickOutside(event) {
-    if (!this.element.contains(event.target)) {
+    if (!this.element.contains(event.target) && !this.panelTarget.contains(event.target)) {
       this.close()
     }
   }
