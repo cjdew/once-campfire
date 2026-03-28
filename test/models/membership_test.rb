@@ -87,4 +87,28 @@ class MembershipTest < ActiveSupport::TestCase
 
     @membership.destroy
   end
+
+  test "unread_count returns messages after last_read_message_id" do
+    membership = memberships(:david_designers)
+    # Set last_read_message_id to the first message
+    membership.update_columns(last_read_message_id: messages(:first).id)
+
+    # second and third are in designers room, after first
+    assert_equal 2, membership.unread_count
+  end
+
+  test "unread_count returns total messages when last_read_message_id is nil" do
+    membership = memberships(:david_designers)
+    membership.update_columns(last_read_message_id: nil)
+
+    assert_equal rooms(:designers).messages.root_messages.count, membership.unread_count
+  end
+
+  test "mark_read sets last_read_message_id to latest message" do
+    membership = memberships(:david_designers)
+    membership.mark_read
+
+    assert_equal rooms(:designers).messages.root_messages.order(:id).last.id, membership.last_read_message_id
+    assert_nil membership.unread_at
+  end
 end

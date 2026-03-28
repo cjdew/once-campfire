@@ -14,7 +14,13 @@ module Membership::Connectable
     end
 
     def connect(membership, connections)
-      where(id: membership.id).update_all(connections: connections, connected_at: Time.current, unread_at: nil)
+      latest_message_id = membership.room.messages.root_messages.order(:id).last&.id
+      where(id: membership.id).update_all(
+        connections: connections,
+        connected_at: Time.current,
+        unread_at: nil,
+        last_read_message_id: latest_message_id
+      )
     end
   end
 
