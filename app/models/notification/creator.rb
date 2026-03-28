@@ -25,13 +25,21 @@ class Notification::Creator
 
   private
     def create_notification(user:, kind:, message:)
-      Notification.create!(
+      notification = Notification.create!(
         user: user,
         room: @message.room,
         message: message,
         kind: kind
       )
+      broadcast_notification(notification)
     rescue ActiveRecord::RecordNotUnique
       # Already notified for this message — skip
+    end
+
+    def broadcast_notification(notification)
+      ActionCable.server.broadcast(
+        "user_#{notification.user_id}_notifications",
+        { type: "new_notification", unread_count: Notification.where(user_id: notification.user_id).unread.count }
+      )
     end
 end
