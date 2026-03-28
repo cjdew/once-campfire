@@ -1,0 +1,28 @@
+<% unread = notification.read_at.nil? %>
+<% kind_class = case notification.kind
+  when "mention" then "mention"
+  when "thread_reply" then "thread-reply"
+  when "dm_message" then "dm"
+  end %>
+
+<%= link_to notification_path_for(notification),
+    class: ["notifications-dropdown__item", ("notifications-dropdown__item--unread" if unread), "notifications-dropdown__item--#{kind_class}"],
+    data: { turbo_frame: "_top" } do %>
+  <span class="avatar" style="--avatar-size: 1.75em;">
+    <%= image_tag fresh_user_avatar_path(notification.message.creator), size: 28, aria: { hidden: "true" } %>
+  </span>
+
+  <div class="notifications-dropdown__body">
+    <div class="notifications-dropdown__meta">
+      <span class="notifications-dropdown__kind"><%= notification_kind_label(notification) %></span>
+      <span class="notifications-dropdown__time"><%= time_ago_in_words(notification.created_at) %> ago</span>
+    </div>
+    <div class="notifications-dropdown__context">
+      <strong><%= notification.message.creator.name %></strong>
+      <%= notification_context_text(notification) %>
+    </div>
+    <div class="notifications-dropdown__preview">
+      <%= truncate(notification.message.plain_text_body, length: 80) %>
+    </div>
+  </div>
+<% end %>
