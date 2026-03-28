@@ -5,6 +5,8 @@ class PresenceChannel < RoomChannel
   def present
     membership.present
 
+    Notification.mark_read_for_room(current_user, @room)
+
     broadcast_read_room
   end
 

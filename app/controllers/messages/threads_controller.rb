@@ -6,6 +6,7 @@ class Messages::ThreadsController < ApplicationController
 
   def show
     @replies = @parent_message.replies.includes(:creator, :rich_text_body).order(:created_at)
+    Notification.mark_read_for_thread(Current.user, @parent_message)
   end
 
   private
